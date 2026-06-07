@@ -1,0 +1,9 @@
+[project]
+name = "notes"
+version = "0.1.0"
+description = "Public notes of Rubén Jiménez Mejías — opinionated standards, references, and conventions"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "mkdocs-material>=9.5.0",
+]
