@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 430" font-family="Inter, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a2" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#455A64"/>
+    </marker>
+  </defs>
+  <style>
+    .h{font-size:20px;font-weight:700;fill:#212121}.s{fill:#616161;font-size:12px}
+    .src{fill:#FFF8E1;stroke:#F9A825;stroke-width:1.5}
+    .bt{font-size:14px;font-weight:600;text-anchor:middle;fill:#212121}
+    .bs{font-size:11px;text-anchor:middle;fill:#546E7A}
+    .load{fill:#ECEFF1;stroke:#607D8B;stroke-width:1.2}
+    .edge{stroke:#455A64;stroke-width:1.6;fill:none;marker-end:url(#a2)}
+  </style>
+  <rect width="980" height="430" fill="#ffffff"/>
+  <text x="30" y="36" class="h">Two-tier DC home / Mars architecture</text>
+  <text x="30" y="56" class="s">Physics forces two voltage regimes (P=V·I, safe-V caps power). Both already have blessed standards — zero new ones needed on Earth.</text>
+
+  <!-- sources -->
+  <rect x="30" y="150" width="120" height="50" class="src" rx="6"/><text x="90" y="172" class="bt">Solar PV</text><text x="90" y="190" class="bs">DC</text>
+  <rect x="30" y="215" width="120" height="50" class="src" rx="6"/><text x="90" y="237" class="bt">Battery</text><text x="90" y="255" class="bs">DC</text>
+
+  <!-- 400V bus -->
+  <rect x="230" y="120" width="40" height="180" fill="#E53935"/>
+  <text x="250" y="110" class="bt" fill="#E53935">~400 V DC bus</text>
+  <line x1="150" y1="175" x2="228" y2="175" class="edge"/>
+  <line x1="150" y1="240" x2="228" y2="240" class="edge"/>
+
+  <!-- 400V loads -->
+  <rect x="360" y="120" width="150" height="44" class="load" rx="6"/><text x="435" y="140" class="bt">EV charge</text><text x="435" y="157" class="bs">NACS · 100s A</text>
+  <rect x="360" y="174" width="150" height="44" class="load" rx="6"/><text x="435" y="194" class="bt">Heat pump / oven</text><text x="435" y="211" class="bs">coaxial · ≤25 A</text>
+  <rect x="360" y="228" width="150" height="44" class="load" rx="6"/><text x="435" y="248" class="bt">Fridge</text><text x="435" y="265" class="bs">coaxial</text>
+  <line x1="270" y1="142" x2="358" y2="142" class="edge"/>
+  <line x1="270" y1="196" x2="358" y2="196" class="edge"/>
+  <line x1="270" y1="250" x2="358" y2="250" class="edge"/>
+  <text x="320" y="300" class="bs">dead-front outlets</text>
+
+  <!-- DC/DC -->
+  <rect x="360" y="315" width="150" height="50" fill="#CFD8DC" stroke="#607D8B" rx="6"/>
+  <text x="435" y="337" class="bt">DC/DC</text><text x="435" y="354" class="bs">400 → 48 V</text>
+  <path d="M250 300 V340 H358" class="edge"/>
+
+  <!-- 48V bus -->
+  <rect x="585" y="315" width="34" height="50" fill="#1E88E5"/>
+  <text x="602" y="385" class="bt" fill="#1E88E5">48 V bus</text>
+  <line x1="510" y1="340" x2="583" y2="340" class="edge"/>
+
+  <!-- 48V loads -->
+  <rect x="690" y="300" width="150" height="40" class="load" rx="6"/><text x="765" y="318" class="bt">USB-C outlets</text><text x="765" y="334" class="bs">≤240 W</text>
+  <rect x="690" y="348" width="150" height="40" class="load" rx="6"/><text x="765" y="366" class="bt">Lights · electronics</text><text x="765" y="382" class="bs">touch-safe</text>
+  <line x1="619" y1="320" x2="688" y2="320" class="edge"/>
+  <line x1="619" y1="360" x2="688" y2="368" class="edge"/>
+
+  <!-- annotations -->
+  <text x="600" y="140" class="s" font-weight="700">High tier — ~400 V</text>
+  <text x="600" y="160" class="s">10 kW at only 25 A → thin cable.</text>
+  <text x="600" y="178" class="s">Always behind dead-front.</text>
+  <text x="600" y="196" class="s">Reuse NACS (EV) + coaxial</text>
+  <text x="600" y="214" class="s">family (appliances).</text>
+
+  <text x="690" y="250" class="s" font-weight="700">Low tier — 48 V</text>
+  <text x="690" y="268" class="s">Touch-safe (wet hands).</text>
+  <text x="690" y="286" class="s">Reuse USB-C PD. No new standard.</text>
+</svg>

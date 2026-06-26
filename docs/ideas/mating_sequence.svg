@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 470" font-family="Inter, Helvetica, Arial, sans-serif">
+  <style>
+    .h{font-size:20px;font-weight:700;fill:#212121}.s{fill:#616161;font-size:12px}
+    .lane{fill:#455A64;font-size:13px}.ev{fill:#212121;font-size:12px}
+    .guide{stroke:#CFD8DC;stroke-width:1;stroke-dasharray:3 3}
+    .track{stroke:#E0E0E0;stroke-width:2}
+  </style>
+  <rect width="980" height="470" fill="#ffffff"/>
+  <text x="30" y="36" class="h">Dead-front mate / unmate sequence</text>
+  <text x="30" y="56" class="s">Power is live only in the shaded span — when fully mated, validated, and not yet being pulled. Pins are dead whenever they are partable.</text>
+
+  <!-- ===== PLUG IN ===== -->
+  <text x="30" y="92" class="lane" font-weight="700">PLUG IN  →</text>
+  <!-- guides -->
+  <line x1="200" y1="100" x2="200" y2="250" class="guide"/>
+  <line x1="320" y1="100" x2="320" y2="250" class="guide"/>
+  <line x1="470" y1="100" x2="470" y2="250" class="guide"/>
+  <line x1="610" y1="100" x2="610" y2="250" class="guide"/>
+  <text x="200" y="115" class="ev" text-anchor="middle">PE bond</text>
+  <text x="320" y="115" class="ev" text-anchor="middle">DC± seated (dead)</text>
+  <text x="470" y="115" class="ev" text-anchor="middle">CC mates → handshake</text>
+  <text x="610" y="115" class="ev" text-anchor="middle">energize (soft-start)</text>
+
+  <!-- lanes -->
+  <text x="40" y="148" class="lane">PE</text>
+  <line x1="150" y1="143" x2="900" y2="143" class="track"/>
+  <rect x="200" y="137" width="700" height="12" fill="#757575"/>
+
+  <text x="40" y="180" class="lane">DC±</text>
+  <line x1="150" y1="175" x2="900" y2="175" class="track"/>
+  <rect x="320" y="169" width="290" height="12" fill="#B0BEC5"/>
+  <text x="465" y="166" class="s" text-anchor="middle">dead</text>
+  <rect x="610" y="169" width="290" height="12" fill="#E53935"/>
+  <text x="755" y="166" class="s" text-anchor="middle">live</text>
+
+  <text x="40" y="212" class="lane">CC</text>
+  <line x1="150" y1="207" x2="900" y2="207" class="track"/>
+  <rect x="470" y="201" width="430" height="12" fill="#43A047"/>
+
+  <text x="40" y="244" class="lane">BUS</text>
+  <line x1="150" y1="239" x2="900" y2="239" class="track"/>
+  <path d="M150 239 H610 V233" stroke="#E53935" stroke-width="2.5" fill="none"/>
+  <rect x="610" y="233" width="290" height="0" />
+  <line x1="610" y1="233" x2="900" y2="233" stroke="#E53935" stroke-width="2.5"/>
+
+  <!-- ===== PLUG OUT ===== -->
+  <text x="30" y="320" class="lane" font-weight="700">PLUG OUT  →</text>
+  <line x1="300" y1="328" x2="300" y2="440" class="guide"/>
+  <line x1="340" y1="328" x2="340" y2="440" class="guide"/>
+  <line x1="520" y1="328" x2="520" y2="440" class="guide"/>
+  <line x1="660" y1="328" x2="660" y2="440" class="guide"/>
+  <text x="300" y="343" class="ev" text-anchor="middle">CC breaks</text>
+  <text x="372" y="358" class="ev">SiC opens &lt;µs</text>
+  <text x="520" y="343" class="ev" text-anchor="middle">DC± part (dead)</text>
+  <text x="660" y="343" class="ev" text-anchor="middle">PE breaks last</text>
+
+  <text x="40" y="382" class="lane">BUS</text>
+  <line x1="150" y1="377" x2="900" y2="377" class="track"/>
+  <line x1="150" y1="371" x2="340" y2="371" stroke="#E53935" stroke-width="2.5"/>
+  <path d="M340 371 V377" stroke="#E53935" stroke-width="2.5"/>
+
+  <text x="40" y="414" class="lane">DC±</text>
+  <line x1="150" y1="409" x2="900" y2="409" class="track"/>
+  <rect x="150" y="403" width="190" height="12" fill="#E53935"/>
+  <text x="245" y="400" class="s" text-anchor="middle">live</text>
+  <rect x="340" y="403" width="560" height="12" fill="#B0BEC5"/>
+  <text x="430" y="400" class="s" text-anchor="middle">dead</text>
+
+  <rect x="340" y="426" width="180" height="20" fill="#FFF3E0" stroke="#FB8C00"/>
+  <text x="430" y="440" class="s" text-anchor="middle" fill="#E65100">dead before they part → no arc</text>
+</svg>

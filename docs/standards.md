@@ -243,6 +243,12 @@ Metric system https://youtu.be/hid7EJkwDNk, with its main structure, SI units, b
 Sizes: .5mm,1mm,2mm,3mm,**4mm**,6mm,12mm,**60mm** (Ikea),240mm,,**600mm** (appliances) ...
 Since decimal base is common, add 5mm, 10mm, 50mm, 100mm, etc.
 
+- Shoe sizes: only **Mondopoint** (ISO 9407) *is* the actual foot length; the rest measure the *last* (the mold) in arbitrary units, so they always need a conversion table.
+    - **Mondopoint** — foot length in mm (sometimes + width). Mondo 280 = 28.0 cm of foot. Used by ski boots and the military. The sane one.
+    - **EU (Paris point)** — 1 size = 2/3 cm = 6.67 mm, of the last. EU size × 6.67 mm = last length (EU 45 ≈ 30 cm last, ~28 cm foot). The most "metric" of the three, but still the last.
+    - **UK / US (barleycorn)** — 1 size = 1/3 in ≈ 8.47 mm, of the last, with different zero points (US ≈ UK + 0.5–1).
+    - Practical: measure the foot in mm, or read the cm that Decathlon/Quechua print on the box/tongue label. Crocs mark dual gender "M9 / W11" (women = men + 2), same physical shoe, ≈ EU 42-43.
+
 - Bottle/Can:
     - Standard cocacola can: ~6 x 12 cm. 66.2mm diam, 122mm height
     - plastic bottle: 28-mm PCO 1881
@@ -585,3 +591,9 @@ A button can communicate two things: what **is** (state) or what **will happen**
 
     ??? note "Why not"
         The word "open" flips meaning between fluids and electricity. An open switch blocks current; an open valve lets fluid through. "Let" / "cut" is unambiguous in both domains.
+
+## Future standards (decide later)
+
+Standards above are picks I use *now*. This section is different: long-term, first-principles ideas for what the best standard *could* be once legacy constraints fall away — not things to choose today, but candidates to evaluate and decide between in the future. Tentative by nature.
+
+- **[Power delivery & the ideal DC connector](ideas/power-delivery-dc-connector.md)** — rebuilds "how to send power to a domestic load" from physics. Lands on tiered DC (48 V touch-safe + ~400 V high-power), a **dead-front** connector (pins dead until a handshake confirms full mating — designs out shock *and* arc *and* makes it safe in the wet), and a circular coaxial push-pull shape that scales by diameter. On Earth: reuse USB-C + NACS. On Mars (greenfield): one unified negotiating connector that subsumes them all. Includes diagrams, sizing, handshake protocol, materials, and tentative dimensions.
