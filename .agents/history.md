@@ -42,3 +42,13 @@ Fix sequence that worked:
 Same failure also fires when **renaming a Pages repo** that has a proxied custom domain (the rename triggers a cert re-issue the proxy blocks — it took the apex `rubenayla.xyz` down this same day; see `~/repos/portfolio/.agents/error-log.md` 2026-06-07).
 
 Rule of thumb: **"DNS only when doing DNS"** — keep the Pages record grey for cert issuance (and ideally leave it grey; that's GitHub's recommended setup). CAA was *not* the blocker here — the zone (via the `github.io` CNAME) already authorizes `letsencrypt.org`. Separately, a Cloudflare **redirect rule** on the zone was catching the proxied subdomain and bouncing it to the apex; grey cloud also sidesteps that (rules only apply to proxied traffic).
+
+## 2026-06-26 — Link rule refined: a single footer link portfolio → notes is now allowed
+
+The 2026-06-07 split set the link rule as strictly **one-directional** — notes → portfolio, *never* the reverse — to keep the recruiter-facing surface clean. The author decided to relax it: the portfolio now carries one **unobtrusive footer social icon** ("Notes", `fontawesome/solid/book`) linking here. Both `AGENTS.md` files were updated to match, so the docs no longer contradict the live site.
+
+**Why the absolute rule was too strict.** The rule's real goal is protecting the *primary skim surface* a recruiter sees in 30 seconds — hero, projects, CV button. A footer icon isn't on that path: the person who digs into footer links is an engaged engineer or hiring manager who already wants more depth, and for *that* reader the notes site is a **positive** signal (opinionated first-principles rigor), not a distraction. So the link is invisible to the audience it could cost and visible to the audience it helps. The refined rule keeps the intent precise: **primary surfaces (top nav, hero, page bodies) stay notes-free; a single subtle footer link is the one allowed exception.** Prominent portfolio → notes links are still out.
+
+This was a deliberate author decision (the author explicitly asked for the link), not a rule violation — recorded here rather than in an error log.
+
+Also formalized the same day: the **publishing pipeline** (vault → notes → portfolio), sorted by how finished a piece is — raw/private in `vault`, living/public reference in `notes`, finished/curated showcase in `portfolio`. Pieces graduate rightward; a polished essay can graduate from a notes exploration to a portfolio/writing page, with notes linking *up* to it. Full description in `~/vault/AGENTS.md` ("Publishing pipeline").
