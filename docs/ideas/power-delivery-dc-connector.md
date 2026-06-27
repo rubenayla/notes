@@ -109,75 +109,73 @@ Dead-front + circular geometry make this connector unusually good in the wet —
 - **Dead-front means water is safe by default.** An unmated socket's contacts are dead, so water on the face carries no voltage → no shock, no electrolysis. A dead-front DC outlet could legally sit in a shower zone where AC mains is forbidden.
 - **It also deletes DC's corrosion problem at the face.** Electrolytic corrosion needs sustained voltage across wet metal; with no voltage until mated, wet exposed contacts don't corrode. The one DC downside flagged earlier evaporates exactly where it would matter most.
 - **Circular = trivial to seal.** One continuous radial O-ring, no corners — the reason M12 / Lemo / Buccaneer circular connectors own the waterproof market. A rectangular multi-pin plug can't match it.
-- **Two seal cases:**
-    - *Mated:* radial O-ring on the plug shell against the socket bore → IP67/IP68 when connected.
-    - *Unmated:* a sprung self-closing membrane the plug pushes through, closing on withdrawal (marine-bung style); or a tethered cap. Even if it leaks, the dead contacts only need to drain/dry.
+- **Two seal cases:** *mated* — radial O-ring on the plug shell against the socket bore → IP67/IP68 when connected; *unmated* — a sprung self-closing membrane the plug pushes through, closing on withdrawal (marine-bung style), or a tethered cap; even if it leaks, the dead contacts only need to drain/dry.
 - **Wet-detect interlock:** the isolation check (handshake step 5) refuses to energize on leakage → a flooded socket stays dead.
 - **Target IPX6 mated (powerful jets) → IPX7 (brief immersion).** Specced housings (PPS/LCP, hydrolysis-resistant) + TPE cable-entry overmold + gold/silver-plated contacts carry it.
 
-## Dimensions (tentative)
+## Engineering detail
 
-Radial stack from the axis (pollution-degree-2 creepage at 400 V ≈ 3 mm insulation walls; 48 V walls are mechanical minimums, not electrical):
+The specs behind the recommendation — open what you need.
 
-**400 V / 25 A member — OD 26 mm**
+??? note "Sizing — conductors & contacts"
+    Using the [Standards](../standards.md) wire table (2 mm⌀ ≈ 4 mm² ≈ 30 A; 1 mm⌀ ≈ 0.75 mm² ≈ 16 A; 0.5 mm⌀ ≈ 0.25 mm² ≈ 6 A) and ρ_Cu ≈ 0.0172 Ω·mm²/m:
 
-| band | material | inner → outer radius |
-|---|---|---|
-| DC+ center pin | brass | 0 → 2.0 mm (Ø4.0) |
-| insulation | PPS / LCP | 2.0 → 5.0 mm |
-| DC− ring | brass | 5.0 → 6.5 mm |
-| insulation | | 6.5 → 8.5 mm |
-| CC ring | CuBe | 8.5 → 9.3 mm |
-| insulation | | 9.3 → 10.8 mm |
-| PE shell | brass | 10.8 → 13.0 mm (OD 26) |
+    | Tier | V | I | core pin | cable | connector OD |
+    |---|---|---|---|---|---|
+    | Low | 48 V | 5 A | Ø2 mm | 0.5 mm² (≈20–22 AWG) | ≈ 12 mm |
+    | High | 400 V | 25 A | Ø4 mm | 2.5–4 mm² (≈14–12 AWG) | ≈ 26 mm |
 
-**48 V / 5 A member — OD 12 mm:** same band order scaled ~0.46×, insulation walls floored at ~1 mm → center pin Ø2.0, PE shell outer radius 6.0.
+    - **High tier is sized by heat, not voltage drop.** 25 A over 5 m of 2.5 mm² drops ~1.7 V = 0.4 %. Negligible.
+    - **The whole case for the high tier, in one number:** the same 10 kW at 48 V would be **208 A → ~70 mm² cable** (garden-hose thick). 400 V buys an 8× thinner conductor.
+    - **Low tier is drop-limited, not heat-limited:** 5 A / 3 m / 0.5 mm² ≈ 1 V ≈ 2 %. That's why you don't stretch 48 V to high power.
+    - **Center pin Ø4 mm** is banana-plug class, rated 20–32 A — carries the 25 A and sets the connector's core dimension. Ø2 mm is plenty for 5 A.
+    - **Contact spec is force-over-life, not area.** At 25 A a 1 mΩ contact dissipates 0.6 W locally — fine if the spring holds force, lethal if it relaxes (the Peru fire). → beryllium-copper hyperboloid (Multilam) female on the round pin: many parallel line-contacts, stable mΩ, thousands of cycles. Above ~25 A / 10 kW the inner conductor's trapped heat says hand off to NACS's coolable side-by-side pins.
 
-**Axial / sequencing**
+??? note "Dimensions (tentative)"
+    Radial stack from the axis (pollution-degree-2 creepage at 400 V ≈ 3 mm insulation walls; 48 V walls are mechanical minimums, not electrical):
 
-- Engagement depth: ~18–20 mm (400 V) · ~10 mm (48 V).
-- Tip stagger (sets mate order): PE tip at 0 · DC± recessed 2 mm · CC recessed 4 mm → PE makes ~4 mm of travel before CC.
-- O-ring: 1.5 mm cross-section in a groove at Ø24 mm (400 V) · 1.0 mm at Ø11 mm (48 V).
-- Plug body incl. push-pull sleeve + strain relief: ~50 mm long, body OD ~33 mm (400 V) · ~16 mm (48 V).
+    **400 V / 25 A member — OD 26 mm**
 
-A CAD pass with real IEC 60664 creepage/clearance tables and a thermal sim would move these.
+    | band | material | inner → outer radius |
+    |---|---|---|
+    | DC+ center pin | brass | 0 → 2.0 mm (Ø4.0) |
+    | insulation | PPS / LCP | 2.0 → 5.0 mm |
+    | DC− ring | brass | 5.0 → 6.5 mm |
+    | insulation | | 6.5 → 8.5 mm |
+    | CC ring | CuBe | 8.5 → 9.3 mm |
+    | insulation | | 9.3 → 10.8 mm |
+    | PE shell | brass | 10.8 → 13.0 mm (OD 26) |
 
-## Materials (mostly AC/DC-agnostic)
+    **48 V / 5 A member — OD 12 mm:** same band order scaled ~0.46×, insulation walls floored at ~1 mm → center pin Ø2.0, PE shell outer radius 6.0.
 
-- **Pin (male):** free-machining brass CuZn39Pb (CW614N). Cheap dumb part.
-- **Spring contact (female):** NOT brass (relaxes when hot → the Peru fire mode). Phosphor-bronze CuSn6 (cost) or beryllium-copper CuBe2/C17200 (does it right — best stress-relaxation + cycle life, what Stäubli hyperboloid contacts use).
-- **Plating:** nickel barrier underneath; **silver** on power (best conductivity, wiping cleans tarnish) or tin (cheap); **gold flash** on signal/handshake (low force, low current, no tarnish, stable R).
-- **Insulator:** spec by number — **CTI ≥ 600** (Material Group I, tracking resistance at voltage in damp/dirty conditions), **UL94 V-0**, **glow-wire ~850–960 °C** (mandatory for unattended appliances like a fridge). Thermoset (melamine/phenolic) = best fault-heat safety, no snap-fits; high-temp thermoplastic (PPS, PBT-GF, LCP for fine walls) = moldable latches, good-not-thermoset heat. Soft **TPE/TPU** overmold for strain relief.
+    **Axial / sequencing**
 
-## Sizing (conductors & contacts)
+    - Engagement depth: ~18–20 mm (400 V) · ~10 mm (48 V).
+    - Tip stagger (sets mate order): PE tip at 0 · DC± recessed 2 mm · CC recessed 4 mm → PE makes ~4 mm of travel before CC.
+    - O-ring: 1.5 mm cross-section in a groove at Ø24 mm (400 V) · 1.0 mm at Ø11 mm (48 V).
+    - Plug body incl. push-pull sleeve + strain relief: ~50 mm long, body OD ~33 mm (400 V) · ~16 mm (48 V).
 
-Using the [Standards](../standards.md) wire table (2 mm⌀ ≈ 4 mm² ≈ 30 A; 1 mm⌀ ≈ 0.75 mm² ≈ 16 A; 0.5 mm⌀ ≈ 0.25 mm² ≈ 6 A) and ρ_Cu ≈ 0.0172 Ω·mm²/m:
+    A CAD pass with real IEC 60664 creepage/clearance tables and a thermal sim would move these.
 
-| Tier | V | I | core pin | cable | connector OD |
-|---|---|---|---|---|---|
-| Low | 48 V | 5 A | Ø2 mm | 0.5 mm² (≈20–22 AWG) | ≈ 12 mm |
-| High | 400 V | 25 A | Ø4 mm | 2.5–4 mm² (≈14–12 AWG) | ≈ 26 mm |
+??? note "Materials (mostly AC/DC-agnostic)"
+    - **Pin (male):** free-machining brass CuZn39Pb (CW614N). Cheap dumb part.
+    - **Spring contact (female):** NOT brass (relaxes when hot → the Peru fire mode). Phosphor-bronze CuSn6 (cost) or beryllium-copper CuBe2/C17200 (does it right — best stress-relaxation + cycle life, what Stäubli hyperboloid contacts use).
+    - **Plating:** nickel barrier underneath; **silver** on power (best conductivity, wiping cleans tarnish) or tin (cheap); **gold flash** on signal/handshake (low force, low current, no tarnish, stable R).
+    - **Insulator:** spec by number — **CTI ≥ 600** (Material Group I, tracking resistance at voltage in damp/dirty conditions), **UL94 V-0**, **glow-wire ~850–960 °C** (mandatory for unattended appliances like a fridge). Thermoset (melamine/phenolic) = best fault-heat safety, no snap-fits; high-temp thermoplastic (PPS, PBT-GF, LCP for fine walls) = moldable latches, good-not-thermoset heat. Soft **TPE/TPU** overmold for strain relief.
 
-- **High tier is sized by heat, not voltage drop.** 25 A over 5 m of 2.5 mm² drops ~1.7 V = 0.4 %. Negligible.
-- **The whole case for the high tier, in one number:** the same 10 kW at 48 V would be **208 A → ~70 mm² cable** (garden-hose thick). 400 V buys an 8× thinner conductor.
-- **Low tier is drop-limited, not heat-limited:** 5 A / 3 m / 0.5 mm² ≈ 1 V ≈ 2 %. That's why you don't stretch 48 V to high power.
-- **Center pin Ø4 mm** is banana-plug class, rated 20–32 A — carries the 25 A and sets the connector's core dimension. Ø2 mm is plenty for 5 A.
-- **Contact spec is force-over-life, not area.** At 25 A a 1 mΩ contact dissipates 0.6 W locally — fine if the spring holds force, lethal if it relaxes (the Peru fire). → beryllium-copper hyperboloid (Multilam) female on the round pin: many parallel line-contacts, stable mΩ, thousands of cycles. Above ~25 A / 10 kW the inner conductor's trapped heat says hand off to NACS's coolable side-by-side pins.
+??? note "Handshake protocol (USB-C PD logic, scaled to 400 V)"
+    Reuse, don't invent: USB-C CC (configuration channel) logic + a CCS-style isolation check. The brain lives in the **wall outlet**; the cable stays cheap (signature chip + contacts).
 
-## Handshake protocol (USB-C PD logic, scaled to 400 V)
+    1. **IDLE** — DC± dead; PE shell + a tiny safe sense voltage on CC (Rp pull-up).
+    2. **Mate** — PE makes first (bond), DC± seat *dead*, CC makes **last** (its recess = "fully seated" proof).
+    3. **DETECT** — device presents a known CC signature (resistor for dumb loads, chip for smart).
+    4. **NEGOTIATE** — device states tier (48/400 V) + max current over CC.
+    5. **ISOLATION CHECK** (400 V only) — verify no leakage before closing, like CCS before contactor close.
+    6. **ENERGIZE** — close the SiC solid-state switch with **soft-start** (ramps voltage → swallows inrush, no weld).
+    7. **MONITOR** (loop) — current, ground-fault, arc-fault, over-temp, CC keepalive.
+    8. **Unplug** — CC breaks **first** → SiC opens in **microseconds** → DC± separate already dead (no arc) → PE breaks last.
 
-Reuse, don't invent: USB-C CC (configuration channel) logic + a CCS-style isolation check. The brain lives in the **wall outlet**; the cable stays cheap (signature chip + contacts).
-
-1. **IDLE** — DC± dead; PE shell + a tiny safe sense voltage on CC (Rp pull-up).
-2. **Mate** — PE makes first (bond), DC± seat *dead*, CC makes **last** (its recess = "fully seated" proof).
-3. **DETECT** — device presents a known CC signature (resistor for dumb loads, chip for smart).
-4. **NEGOTIATE** — device states tier (48/400 V) + max current over CC.
-5. **ISOLATION CHECK** (400 V only) — verify no leakage before closing, like CCS before contactor close.
-6. **ENERGIZE** — close the SiC solid-state switch with **soft-start** (ramps voltage → swallows inrush, no weld).
-7. **MONITOR** (loop) — current, ground-fault, arc-fault, over-temp, CC keepalive.
-8. **Unplug** — CC breaks **first** → SiC opens in **microseconds** → DC± separate already dead (no arc) → PE breaks last.
-
-Invariant: **DC± is live only when fully mated + validated + fault-free.** Shock and arc are designed out, not mitigated. The per-outlet SiC switch also replaces the breaker — faster, resettable, per-socket.
+    Invariant: **DC± is live only when fully mated + validated + fault-free.** Shock and arc are designed out, not mitigated. The per-outlet SiC switch also replaces the breaker — faster, resettable, per-socket.
 
 ## The inversion (the takeaway)
 
