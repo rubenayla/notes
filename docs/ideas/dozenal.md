@@ -4,13 +4,25 @@ Decimal (base 10) is an accident of anatomy — we have ten fingers. Base 12 is 
 
 Main project repo: [github.com/rubenayla/basekit](https://github.com/rubenayla/basekit) — dozenal research, notation, references, and implementation notes.
 
-## Why twelve
+## We already count in twelves
 
-A number base has one real job: to write down the amounts people actually use. And the amounts people use most are **fractions of whole things** — half a loaf, a third of an hour, a quarter cup, three-quarters of the way there.
+Here is the giveaway that twelve is special: in a world that *counts* in tens, the moment something needs to be **divided**, people quietly switch to twelve.
 
-Here is the catch: whether a fraction comes out as a clean short number or an ugly endless one depends entirely on the base. **A fraction terminates cleanly only when the base divides evenly by its bottom number.** So the more numbers a base divides by — its **divisors** — the more everyday fractions it can write without the digits running off forever. That is the whole case for choosing a base: pick the one that divides nicely.
+- **Time** — the day is two twelves (`18:00` is 6 in the afternoon, the dozen counted twice); the clock face has 12 hours; an hour holds 60 minutes and a minute 60 seconds (60 = 5 × 12); the year has 12 months.
+- **Angles** — a full turn is 360° (= 30 × 12), chosen so half, third, quarter, sixth, and twelfth of a circle all come out whole (180°, 120°, 90°, 60°, 30°).
+- **Music** — the octave divides into 12 semitones, which is what lets chords land on clean thirds, fourths, and fifths.
+- **Trade** — eggs and pastries sell by the **dozen** (12) and the **gross** (144 = 12²); a foot is 12 inches; pre-decimal Britain ran 12 pence to the shilling for centuries.
+- **Your own hand** — the four fingers have three segments each; tap them with the thumb and you count to twelve on one hand (several cultures did exactly this). The "ten fingers" that gave us base ten overlooked that the same hand already holds a tidy dozen.
 
-Twelve divides evenly by **2, 3, 4, and 6**, so the common cuts all land on a single clean digit:
+None of these is coincidence or fashion. Every one is a case where a quantity gets *cut up* — into halves, thirds, quarters — and ten can't do that without remainders, so the system reached for twelve instead. **We already use base twelve wherever dividing matters; we just never made it the base we count in.** Ten won counting (we have ten fingers); twelve quietly won everything that gets divided.
+
+## Why — twelve divides cleanly
+
+A number base earns its keep by writing the amounts people actually use, and the thing people do most with amounts is **split them and scale them by small numbers** — halve a loaf, take a third of an hour, double a recipe, triple it. Start with dividing.
+
+Whether a fraction comes out as a clean short number or an ugly endless one depends entirely on the base: **a fraction terminates only when the base divides evenly by its bottom number.** So the more numbers a base divides by — its **divisors** — the more everyday fractions it can write without the digits running off forever.
+
+Twelve divides evenly by **2, 3, 4, and 6**, so the common cuts each land on a single clean digit:
 
 - half = 0;6 · third = 0;4 · quarter = 0;3 · sixth = 0;2 — all exact.
 
@@ -29,7 +41,34 @@ Ten divides only by **2 and 5**. Halves and fifths are fine, but **thirds never 
 
 So why not an even *more* divisible base? **Six** has the highest divisibility for its size, but it is too small — everyday quantities keep spilling into two digits (12 becomes "20", 36 becomes "100"), so numbers get longer to read and write. **Twenty-four** has even more divisors but an unwieldy digit set and times tables. **Twelve** lands in the sweet spot: enough divisors, a comfortable digit count.
 
-### The other extreme: base 11
+## The same property helps multiplication
+
+The divisor advantage isn't only about cutting things up — it makes *building them up*, counting and multiplying, cleaner too.
+
+**More round numbers.** A "round" number ends in 0 — a whole number of bases. In ten, round means a multiple of 10 = 2 × 5. In twelve, round means a multiple of 12 = 2 × 2 × 3 — far more small factors, so the quantities you reach counting by 2s, 3s, 4s, or 6s hit round numbers far more often. Three fours make `10;`, a clean round dozen; so do two sixes and four threes. In base ten, 3 × 4 = 12 isn't round at all.
+
+**Shorter times tables.** Because 2, 3, 4, and 6 each divide twelve, their tables fall into short repeating patterns instead of base ten's long scramble:
+
+- by 3s: `3 6 9 10; 13; 16; 19; 20;` — the last digit cycles **3-6-9-0** every four steps.
+- by 4s: last digit cycles **4-8-0** every three steps.
+- by 6s: last digit cycles **6-0** every two steps.
+
+You learn those by seeing the pattern, not by memorising ten unrelated endings — base ten's 3× table ends in 3-6-9-2-5-8-1-4-7-0, with no short cycle to lean on.
+
+??? note "Last-digit cycles, base 10 vs base 12"
+    **Counting by threes**
+
+    - base 10: 3 6 9 12 15 18 21 24 27 30 → last digits **3 6 9 2 5 8 1 4 7 0** (no repeat until the tenth)
+    - base 12: 3 6 9 10; 13; 16; 19; 20; 23; 26; 29; 30; → last digits **3 6 9 0** repeating (every fourth)
+
+    **Counting by fours**
+
+    - base 10: 4 8 12 16 20 → last digits **4 8 2 6 0** (every fifth)
+    - base 12: 4 8 10; 14; 18; 20; → last digits **4 8 0** repeating (every third)
+
+    The shorter the cycle, the less there is to memorise — and the cycle is short exactly when the multiplier divides the base.
+
+## The other extreme: base 11
 
 To feel why twelve works, look at its neighbour eleven — a prime, divisible by nothing but 1 and itself. Take a plank one unit long (written `10` in any base, since `10` always means "one whole base") and cut it in half. Where do you mark the pencil?
 
