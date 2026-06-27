@@ -31,6 +31,8 @@ nav:
   - Standards: standards.md
   - Proposed future standards:
     - Power delivery & DC connector: ideas/power-delivery-dc-connector.md
+    - Dozenal (base 12): ideas/dozenal.md
+    - Fundamental distance unit: ideas/fundamental-distance-unit.md
   - Portfolio ↗: https://rubenayla.xyz/
 
 markdown_extensions:

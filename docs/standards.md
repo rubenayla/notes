@@ -57,17 +57,11 @@ Preferred numbers:
 
 
 - 1-2-5 Series: 0.1 0.2 0.5 **1 2 5** 10 20 50 100...
-- **Dozenal 1-2-4-8 Series**: ;1 ;2 ;4 ;8 1 2 4 8 10;
-- **Dozenal 1-2-4-6 Series**: ;1 ;2 ;4 ;6 1 2 4 6 10; 20; 40; 60;... (secondary to add are 1;6, 3, and 8)
-- **Dozenal precise series:**
-    - 1 (+1/2) 1;6 (+1/2) 2 (+2/2) 3 (+2/2) 4 (+4/2) 6 (+4/2) 8 (+8/2) 10;
-    - **1 1;6 2 3 4 6 8 10;** 16; 20; 30; 40; 60; 80; 100;
-    - Take a number and add half of it two times to get the two next ones, repeat with the last one until you get to 10; times the original one. Or, multiply by 3/2, 4/3, 3/2, 4/3, 2/3, 4/3, 3/2. Adds a half, then a third, then a half... until it adds the last half and gets to a dozen of the original.
 - E Series IEC60063: E-12 10^(1/12) each number ~21.2% bigger. With 10% error they overlap. 10 12 15 18 22 27 33 39 47 56 58 82 100
 - E-6_12 eq: 1 1.6 2.5 4 6 8 10
 
 - Write decimal numbers using the decimal dot: "." and space or nothing as thousand's separator, " " (not comma to avoid confusion): .5, 0.5, 100 000, 2.54. Or just use unit prefixes or scientific notation.
-- With dozenal, use a semicolon (";") to indicate the base and the fractional part, say "sub", write a long comma with handwriting. Use d3 for the equivalent of kilo, d3=10;^3 etc. 1 dometer = 1000; meters = 1; d3m = 1;d3 m.
+- Dozenal (base 12) — its preferred-number series and the semicolon-radix / `d3` notation — has moved to [Proposed future standards → Dozenal](ideas/dozenal.md), since base 12 isn't yet in use anywhere.
 
 - To express any arbitrary base: "last digit of the base 1,2,...,9,A,B,...Z"_"number"."fractional part". 12.5 = 9_12.5 = B_10.6 = F_C.8 (0xC.8) = 1_1100.1 (0b1100.1)
 
@@ -238,7 +232,7 @@ It's more important to respect a standard size than change it to a round number 
 
 Reference dimensions: Paper thickness .1mm, mechanical pencil lead .5mm, tip 1mm, pen ink tube inside 2mm, outside 3mm, tip inside tube and notebook squares 4mm, tip outside tube 5mm,
 
-Metric system https://youtu.be/hid7EJkwDNk, with its main structure, SI units, but not so sure about the decimal system. In the future, maybe The Harmonic System, based on fundamental physical constants, with dozenal base.
+Metric system https://youtu.be/hid7EJkwDNk, with its main structure, SI units, but not so sure about the decimal system. For a fundamental, constant-grounded replacement, see [Proposed future standards → Fundamental distance unit](ideas/fundamental-distance-unit.md).
 
 Sizes: .5mm,1mm,2mm,3mm,**4mm**,6mm,12mm,**60mm** (Ikea),240mm,,**600mm** (appliances) ...
 Since decimal base is common, add 5mm, 10mm, 50mm, 100mm, etc.
@@ -597,3 +591,5 @@ A button can communicate two things: what **is** (state) or what **will happen**
 Standards above are picks I use *now*. This section is different: long-term, first-principles **proposals** for what the best standard *could* be once legacy constraints fall away — not things to adopt today, but candidates to evaluate and refine. Tentative by nature.
 
 - **[Power delivery & the ideal DC connector](ideas/power-delivery-dc-connector.md)** — rebuilds "how to send power to a domestic load" from physics. Lands on tiered DC (48 V touch-safe + ~400 V high-power), a **dead-front** connector (pins dead until a handshake confirms full mating — designs out shock *and* arc *and* makes it safe in the wet), and a circular coaxial push-pull shape that scales by diameter. On Earth: reuse USB-C + NACS. On Mars (greenfield): one unified negotiating connector that subsumes them all. Includes diagrams, sizing, handshake protocol, materials, and tentative dimensions.
+- **[Dozenal (base 12)](ideas/dozenal.md)** — base 12 as the number system: why it beats base 10 (it's highly composite, so halves, thirds, and quarters all terminate cleanly), the semicolon-radix notation, and the dozenal preferred-number series. Foundation for the distance unit below.
+- **[A fundamental distance unit](ideas/fundamental-distance-unit.md)** — a length unit defined purely from physics as **12^N Planck lengths**, where the *only* human choice is the integer hop count N. Anchored to the Planck length because it is nature's minimal length, so the unit's "1" coincides with the smallest meaningful distance; everyday rung ≈ 4.6 cm (finger-scale). Explains why the SI's frozen constants and the Harmonic System's fudged "harmon" were both rejected.
