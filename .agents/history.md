@@ -52,3 +52,25 @@ The 2026-06-07 split set the link rule as strictly **one-directional** — notes
 This was a deliberate author decision (the author explicitly asked for the link), not a rule violation — recorded here rather than in an error log.
 
 Also formalized the same day: the **publishing pipeline** (vault → notes → portfolio), sorted by how finished a piece is — raw/private in `vault`, living/public reference in `notes`, finished/curated showcase in `portfolio`. Pieces graduate rightward; a polished essay can graduate from a notes exploration to a portfolio/writing page, with notes linking *up* to it. Full description in `~/vault/AGENTS.md` ("Publishing pipeline").
+
+## 2026-06-26 — Distance unit for the dozenal "Future standards" system: keep Planck × 12^N, discard the harmon
+
+Worked out from first principles how to define the distance unit for the aspirational dozenal measurement system (a "Future standards" candidate, not a current pick). **Decision: keep the author's own unit — Planck length × 12^N — and discard the existing Harmonic System's "harmon."**
+
+**Hard rule adopted for the system:** a fundamental unit must be defined purely from physical constants; the *only* permitted human choice is the integer power of twelve (12^N) that scales it to human convenience. No frozen/arbitrary reference values, no fitting to legacy units.
+
+**Size of the unit** — Planck length (ℓ_P = 1.616×10⁻³⁵ m) × 12^N:
+- N = 31 → 4.6 cm · **N = 32 → 0.553 m** (the natural human-scale base unit) · N = 33 → 6.63 m.
+
+**Physics established along the way (condensed reasoning):**
+- The SI's "exact" *h* and *k_B* are **conventions**, fixed by fiat in the 2019 redefinition. Fixing them created no physical accuracy — it relocated the uncertainty (e.g. into the realization of the kilogram). So "exactness" is not a reason to favour a constant.
+- Only **dimensionless** constants (fine-structure α, mass ratios) are convention-free physics. Every **dimensional** constant (c, ħ, G, k_B) is a conversion factor whose value reflects an arbitrary unit choice. *k_B* is **redundant, not arbitrary**: temperature is energy in disguise (k_B = 1 in natural units); the arbitrary thing is the temperature unit, and the length unit is dimensionally independent of it.
+- **G is the worst-measured constant in physics** (~2×10⁻⁵ relative uncertainty; gravity is too weak and has no exact macroscopic quantum effect to exploit, unlike EM's Josephson / quantum-Hall). So anything tied to the Planck length (ℓ_P = √(ħG/c³)) inherits ~10⁻⁵ realizability. **Accepted trade-off:** ~10⁻⁵ is far beyond any human/engineering need (nobody measures length better than ppm), so for a human-scale unit the G-imprecision is irrelevant; fundamentality wins. The *definition* is exact; the *realization* sharpens as G is measured better — honest, not faked, precision.
+
+**Why the Harmonic System (Dozenal Wiki / "Universal Unit System", asahi-net dd6t-sg) was discarded** despite being genuinely physics-based:
+- Its length unit, the **harmon = 272.35 mm**, is strictly defined as (dozenal `1,001,700;`) ÷ Rydberg constant = 2,988,720 / R∞ — anchored to the **Rydberg constant** (a *precise* atomic constant, ~10⁻¹²; G only sets the rough "conceptual" scale, not the operational definition). So it is precise and physics-based.
+- But the multiplier `1,001,700;` is **not a single clean power of twelve.** A clean 12⁶ (= `1,000,000;`) gives (1/R∞)×12⁶ = 272.09 mm. The harmon nudges that by **+0.09%** to flatter legacy units (100 yd ≈ 240 harmons, cubic half-harmon ≈ 2/3 US gallon, ~1/10⁷dozenal of Earth's meridian). That deliberate fudge toward yards/gallons is exactly the arbitrary fit the hard rule forbids.
+
+**Live thread for when this becomes a Future-standards page:** which fundamental length to anchor to is still open — the Planck length (most fundamental, G-imprecise) vs a precise atomic length (Rydberg / Bohr / electron Compton, ~10⁻¹⁰, but referencing a specific particle). A clean middle option surfaced: (1/R∞) × 12⁶ = 272.09 mm — the harmon with its legacy fudge stripped. The author's stated preference is the Planck anchor.
+
+Sources: [The Harmonic System — Dozenal Wiki](https://dozenal.fandom.com/wiki/The_Harmonic_System) · [Universal Unit System (asahi-net dd6t-sg)](http://www.asahi-net.or.jp/~dd6t-sg/univunit-e/).
