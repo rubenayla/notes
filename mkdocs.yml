@@ -29,7 +29,7 @@ theme:
 nav:
   - Home: index.md
   - Standards: standards.md
-  - Future standards:
+  - Proposed future standards:
     - Power delivery & DC connector: ideas/power-delivery-dc-connector.md
   - Portfolio ↗: https://rubenayla.xyz/
 

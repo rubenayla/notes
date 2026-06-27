@@ -592,8 +592,8 @@ A button can communicate two things: what **is** (state) or what **will happen**
     ??? note "Why not"
         The word "open" flips meaning between fluids and electricity. An open switch blocks current; an open valve lets fluid through. "Let" / "cut" is unambiguous in both domains.
 
-## Future standards (decide later)
+## Proposed future standards
 
-Standards above are picks I use *now*. This section is different: long-term, first-principles ideas for what the best standard *could* be once legacy constraints fall away — not things to choose today, but candidates to evaluate and decide between in the future. Tentative by nature.
+Standards above are picks I use *now*. This section is different: long-term, first-principles **proposals** for what the best standard *could* be once legacy constraints fall away — not things to adopt today, but candidates to evaluate and refine. Tentative by nature.
 
 - **[Power delivery & the ideal DC connector](ideas/power-delivery-dc-connector.md)** — rebuilds "how to send power to a domestic load" from physics. Lands on tiered DC (48 V touch-safe + ~400 V high-power), a **dead-front** connector (pins dead until a handshake confirms full mating — designs out shock *and* arc *and* makes it safe in the wet), and a circular coaxial push-pull shape that scales by diameter. On Earth: reuse USB-C + NACS. On Mars (greenfield): one unified negotiating connector that subsumes them all. Includes diagrams, sizing, handshake protocol, materials, and tentative dimensions.
