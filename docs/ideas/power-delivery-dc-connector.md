@@ -2,8 +2,6 @@
 
 Related: [Standards](../standards.md) → Electric connectors (Type N, NACS, USB-C, XT family) · [Type N blog post](https://rubenayla.blogspot.com/2020/05/we-should-use-type-n-plugs.html)
 
-> **Tentative concept** — reasoned from first principles. Numbers and dimensions are estimates, not validated by CAD, simulation, or prototype. Kept because the direction looks right.
-
 A first-principles rebuild of "how should we send power to a domestic load" (vacuum, fridge, etc.). Starts from 230 V AC as the legacy baseline, then backtracks to DC for the long term (think Mars cities — greenfield, no legacy grid). The conclusion: the connector's *brain* and the *voltage architecture* matter far more than the pin silhouette, which is the last 10 %.
 
 ## Diagrams

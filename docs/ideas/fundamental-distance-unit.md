@@ -1,7 +1,5 @@
 # A fundamental distance unit
 
-> **Proposed / tentative.** A first-principles proposal for the *ideal* distance unit, not a current pick. Its realizable precision is limited today (see below); the *definition* is exact.
-
 A length unit defined **purely from fundamental physics**, with exactly one human choice: how many dozenal steps to climb to reach human scale. Everything else is fixed by nature.
 
 ## The definition
