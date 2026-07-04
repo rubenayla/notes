@@ -247,6 +247,15 @@ The numbers behind the recommendation. Open what you need.
 
     Rule: **DC± is live only when fully mated, validated, and fault-free.** Shock and arc are designed out, not mitigated. The per-outlet SiC switch also replaces the breaker — faster, resettable, per-socket.
 
+??? note "Where the voltage is made: central bus, per-socket switching"
+    The heavy regulation is central; each socket only switches and does a small step-down.
+
+    - **One central home unit** (it replaces the breaker panel and inverter) takes PV, battery, or grid and produces the regulated **400 V DC house bus**. All the heavy conversion happens once, here — that's the efficiency win, and it's where the source is managed (PV tracking, battery charge/discharge, grid rectification).
+    - **400 V runs to every socket** on thin cable (400 V = low current). There is **no second house-wide 48 V bus** — 48 V over house distances would need fat copper, the exact problem 400 V avoids.
+    - **Each socket switches; it doesn't do the heavy regulation.** It has the SiC dead-front gate, the handshake controller, and fault monitoring — cheap silicon that replaces today's breaker with a smarter per-socket one. A device that negotiates **400 V** gets the bus gated straight through (no converter). A device that negotiates **48 V** (or a dumb device defaulting to it) is fed by a **small 400→48 V step-down in the socket** (≤240 W, USB-C-charger-sized), which only runs for small loads and is off when idle.
+
+    So: pre-regulated 400 V from one central device, distributed everywhere; per-socket electronics that gate 400 V through and make 48 V locally for the touch-safe/default path. The bulky magnetics stay central; the socket carries only a switch and a small buck. And a device that wants, say, 5 V converts it straight from 400 V in one step — you never step 400→48 and then 48→5.
+
 ## Materials
 
 Mostly the same for AC or DC — a connector cares about heat, contact force, and surface tracking, not whether the current alternates. The one DC-specific point is at the end.
