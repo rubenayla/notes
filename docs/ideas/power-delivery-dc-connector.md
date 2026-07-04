@@ -12,7 +12,7 @@ This works it out from scratch. It starts from 230 V AC as today's baseline, the
 | **Control** | active — a handshake switches power on only when fully mated, off before it separates. Dumb devices default to 48 V via a resistor on the handshake pin (like USB-C); 400 V needs an active chip | [why](#decision-1-active-dead-front-the-connector-switches-its-own-power) |
 | **Current** | DC | [why](#decision-2-dc-not-ac) |
 | **Voltages** | two: 48 V (touch-safe, up to 240 W) · ~400 V (high power, up to ~10 kW at 25 A) | [why](#decision-3-two-voltages-48-v-touch-400-v-power) |
-| **Conductors** | 2 power (center +, outer −) + a handshake/earth ring | [why](#shape) |
+| **Conductors** | 4, from the center out: + pin, − ring, a handshake ring, and an outer earth shell (which also shields) | [why](#shape) |
 | **Orientation** | reversible at any angle | [why](#shape) |
 | **Size** | ~12 mm outer diameter at 48 V · ~26 mm at 400 V; scales by diameter | [why](#engineering-detail) |
 | **Sealing** | single O-ring, IPX6–IPX7 (wet and dust) | [why](#water-resistance-ip-bathrooms-outdoors) |
@@ -167,7 +167,7 @@ With the architecture fixed, the pin geometry is the easy part, and dead-front r
 
 **Recommendation: circular coaxial, push-pull self-latching, single O-ring, dead-front.**
 
-- **Concentric conductors:** center pin = +, outer ring = −, thin intermediate ring = handshake/PE. Two power conductors fit coaxial exactly (why coaxial fails for AC's 3 wires but works for DC's 2).
+- **Concentric conductors:** four, from the center out — center pin = +, a − ring, a thin handshake (CC) ring, and the outer shell = earth (PE), which also shields. Only the two *power* conductors need coaxial; that's what fails for AC's 3 wires but works for DC's 2.
 - **Rotationally symmetric → reversible at any angle.** Better than USB-C's two ways; you never have to orient it. Polarity is set electrically by the handshake, so symmetry is safe.
 - **Push-pull latch (Lemo/Fischer-style):** push in → a click means fully seated, and only then does the handshake complete and power come on (seating is tied to power, so a half-insertion is dead by construction). Pull the outer sleeve to release; no twisting a stiff cable.
 - **One circular gasket** → wet- and dust-proof (Mars regolith, bathrooms, outdoors).
