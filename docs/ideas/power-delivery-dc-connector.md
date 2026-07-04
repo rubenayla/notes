@@ -11,10 +11,10 @@ This works it out from scratch. It starts from 230 V AC as today's baseline, the
 | **Shape** | circular coaxial, push-pull self-latching | [why](#shape) |
 | **Control** | active — a handshake switches power on only when fully mated, off before it separates. Dumb devices default to 48 V via a resistor on the handshake pin (like USB-C); 400 V needs an active chip | [why](#decision-1-active-dead-front-the-connector-switches-its-own-power) |
 | **Current** | DC | [why](#decision-2-dc-not-ac) |
-| **Voltages** | two: 48 V (touch-safe, up to 240 W) · ~400 V (high power, up to ~10 kW at 25 A) | [why](#decision-3-two-voltages-48-v-touch-400-v-power) |
+| **Voltages** | one connector, two negotiated states: 48 V (touch-safe, up to 240 W) · ~400 V (high power, up to ~10 kW at 25 A) | [why](#decision-3-two-voltages-48-v-touch-400-v-power) |
 | **Conductors** | 4, from the center out: + pin, − ring, a handshake ring, and an outer earth shell (which also shields) | [why](#shape) |
 | **Orientation** | reversible at any angle | [why](#shape) |
-| **Size** | ~12 mm outer diameter at 48 V · ~26 mm at 400 V; scales by diameter | [why](#engineering-detail) |
+| **Size** | one size, ~26 mm outer diameter, built for the home max (400 V, 25 A); small loads use the same plug, over-provisioned | [why](#shape) |
 | **Sealing** | single O-ring, IPX6–IPX7 (wet and dust) | [why](#water-resistance-ip-bathrooms-outdoors) |
 | **Materials** | brass pin, beryllium-copper spring contacts, silver/gold plating, PPS/LCP insulator | [why](#materials) |
 | **Range** | home use up to ~25 A / 10 kW; hand off to NACS above that | [why](#shape) |
@@ -172,7 +172,7 @@ With the architecture fixed, the pin geometry is the easy part, and dead-front r
 - **Push-pull latch (Lemo/Fischer-style):** push in → a click means fully seated, and only then does the handshake complete and power come on (seating is tied to power, so a half-insertion is dead by construction). Pull the outer sleeve to release; no twisting a stiff cable.
 - **One circular gasket** → wet- and dust-proof (Mars regolith, bathrooms, outdoors).
 - **Self-shielding** (outer conductor shields the inner) → low EMI.
-- **Scale by diameter into a family** — same idea as XT30→XT150: same shape, bigger = more current. One geometry spans charger to appliance.
+- **One connector, one size — the range is handled by negotiation, not by swapping plugs.** It's built once for the home maximum (400 V, 25 A / 10 kW; Ø4 mm center pin, ~26 mm OD, insulated for 400 V). The *same* plug runs a phone at 48 V and a fraction of an amp and a 10 kW load at 400 V / 25 A — voltage and current are negotiated electronically (USB-C PD style), so everything intermates. A small load just over-provisions the connector, the way a wall socket powers a phone charger today. This is the whole point: one universal plug, not a family of sizes. The connector is bigger than USB-C because it must also carry 25 A — that's the accepted cost of it being the only one you need.
 - **Contacts:** sprung beryllium-copper female (hyperboloid cage on the round center pin) for low, stable resistance under load; silver-plated power surfaces, gold flash on the handshake ring. Phosphor-bronze (CuSn6) as the cheaper spring.
 - **Limit:** coaxial traps the inner conductor's heat, so it's good to ~25 A / 10 kW (all home appliances). Above that (EV fast-charge, hundreds of amps) separated side-by-side pins cool better — that's NACS's domain. Simple split: coaxial for home, NACS for EV-scale.
 
@@ -195,24 +195,24 @@ Dead-front plus a circular shape make this connector good in the wet, probably i
 
 The numbers behind the recommendation. Open what you need.
 
-??? note "Sizing — conductors & contacts"
-    Using the [Standards](../standards.md) wire table (2 mm⌀ ≈ 4 mm² ≈ 30 A; 1 mm⌀ ≈ 0.75 mm² ≈ 16 A; 0.5 mm⌀ ≈ 0.25 mm² ≈ 6 A) and ρ_Cu ≈ 0.0172 Ω·mm²/m:
+??? note "Sizing — one connector, the cable is what varies"
+    The connector is built once for the home maximum — **Ø4 mm center pin, ~26 mm OD, insulated for 400 V, rated 25 A**. Only the *cable* changes with what a device actually draws; the plug is identical. Using the [Standards](../standards.md) wire table (2 mm⌀ ≈ 4 mm² ≈ 30 A; 1 mm⌀ ≈ 0.75 mm² ≈ 16 A; 0.5 mm⌀ ≈ 0.25 mm² ≈ 6 A) and ρ_Cu ≈ 0.0172 Ω·mm²/m:
 
-    | Tier | V | I | core pin | cable | connector OD |
-    |---|---|---|---|---|---|
-    | Low | 48 V | 5 A | Ø2 mm | 0.5 mm² (≈20–22 AWG) | ≈ 12 mm |
-    | High | 400 V | 25 A | Ø4 mm | 2.5–4 mm² (≈14–12 AWG) | ≈ 26 mm |
+    | Device draw | typical negotiated V · I | cable gauge (same connector) |
+    |---|---|---|
+    | Small (phone, lamp) | 48 V · ≤5 A | 0.5 mm² (≈20–22 AWG) |
+    | Full load (kettle, home EV) | 400 V · 25 A | 2.5–4 mm² (≈14–12 AWG) |
 
-    - **High tier is sized by heat, not voltage drop.** 25 A over 5 m of 2.5 mm² drops ~1.7 V = 0.4 %. Negligible.
-    - **The case for the high tier, in one number:** the same 10 kW at 48 V would be **208 A → ~70 mm² cable** (garden-hose thick). 400 V buys an 8× thinner conductor.
-    - **Low tier is drop-limited, not heat-limited:** 5 A / 3 m / 0.5 mm² ≈ 1 V ≈ 2 %. That's why you don't stretch 48 V to high power.
-    - **Center pin Ø4 mm** is banana-plug class, rated 20–32 A — carries the 25 A and sets the connector's core dimension. Ø2 mm is plenty for 5 A.
+    - **Sized by heat, not voltage drop.** 25 A over 5 m of 2.5 mm² drops ~1.7 V = 0.4 %. Negligible.
+    - **Why 400 V for the big loads, in one number:** the same 10 kW at 48 V would be **208 A → ~70 mm² cable** (garden-hose thick). 400 V buys an 8× thinner conductor.
+    - **A small device just pairs the same plug with a thinner cable:** 5 A / 3 m / 0.5 mm² ≈ 1 V ≈ 2 % drop. It never draws the full 25 A, but the connector is over-provisioned so it still fits every socket.
+    - **Center pin Ø4 mm** (banana-plug class, rated 20–32 A) carries the full 25 A and fixes the connector's size for every device.
     - **Contact spec is force-over-life, not area.** At 25 A a 1 mΩ contact dissipates 0.6 W locally — fine if the spring holds force, dangerous if it relaxes (the Peru fire). → beryllium-copper hyperboloid (Multilam) female on the round pin: many parallel line-contacts, stable mΩ, thousands of cycles. Above ~25 A / 10 kW the inner conductor's trapped heat says hand off to NACS's coolable side-by-side pins.
 
 ??? note "Dimensions (tentative)"
-    Radial stack from the axis (pollution-degree-2 creepage at 400 V ≈ 3 mm insulation walls; 48 V walls are mechanical minimums, not electrical):
+    Radial stack from the axis, one size for every device (pollution-degree-2 creepage at 400 V ≈ 3 mm insulation walls):
 
-    **400 V / 25 A member — OD 26 mm**
+    **The connector — OD 26 mm, rated 400 V / 25 A**
 
     | band | material | inner → outer radius |
     |---|---|---|
@@ -224,14 +224,12 @@ The numbers behind the recommendation. Open what you need.
     | insulation | | 9.3 → 10.8 mm |
     | PE shell | brass | 10.8 → 13.0 mm (OD 26) |
 
-    **48 V / 5 A member — OD 12 mm:** same band order scaled ~0.46×, insulation walls floored at ~1 mm → center pin Ø2.0, PE shell outer radius 6.0.
-
     **Axial / sequencing**
 
-    - Engagement depth: ~18–20 mm (400 V) · ~10 mm (48 V).
+    - Engagement depth: ~18–20 mm.
     - Tip stagger (sets mate order): PE tip at 0 · DC± recessed 2 mm · CC recessed 4 mm → PE makes ~4 mm of travel before CC.
-    - O-ring: 1.5 mm cross-section in a groove at Ø24 mm (400 V) · 1.0 mm at Ø11 mm (48 V).
-    - Plug body incl. push-pull sleeve + strain relief: ~50 mm long, body OD ~33 mm (400 V) · ~16 mm (48 V).
+    - O-ring: 1.5 mm cross-section in a groove at Ø24 mm.
+    - Plug body incl. push-pull sleeve + strain relief: ~50 mm long, body OD ~33 mm.
 
     A CAD pass with real IEC 60664 creepage/clearance tables and a thermal sim would move these.
 
@@ -275,7 +273,7 @@ The key choices behind that table:
 It's easy to focus on the pin shape, but the decisions that matter are the connector's control (passive mitigation vs active dead-front) and the voltage (legacy 230 AC vs two DC voltages). Choosing dead-front solves shock, arcing, and reversibility at once, and makes AC-vs-DC a simple system choice. The geometry is the small part.
 
 - **Earth, today:** a Type-N-class passive plug with sprung CuBe contacts, sleeved pins, earth-first sequencing, and a detent click — the "mitigate the accepted hazard" answer, correct while we're stuck on legacy AC. Build it dead-front-ready.
-- **Long term / Mars:** two DC voltages (48 V + ~400 V), dead-front everywhere, and one unified coaxial push-pull negotiating connector family that replaces mains, USB-C, barrel, and EV plugs.
+- **Long term / Mars:** two negotiated DC voltages (48 V + ~400 V) through **one** dead-front coaxial push-pull connector — the same plug for phone, lamp, fridge, kettle, and home EV charging, replacing mains, USB-C, and barrel. Only public DC fast-charging (hundreds of amps) stays on NACS.
 
 ## See also
 

@@ -46,7 +46,7 @@ Auto-deploys on push to `main` via `.github/workflows/deploy.yml` (GitHub Pages)
 
 ## Agent Files
 - `.agents/tasks.md` — task board (TODO / In Progress / Done)
-- `.agents/history.md` — dated record of decisions and context (grep, never read in full)
+- `history.md` (repo root) — dated record of decisions and context (grep, never read in full)
 - `.agents/error-log.md` — mistakes and prevention rules
 
 ## standards.md conventions
