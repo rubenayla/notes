@@ -4,6 +4,21 @@ The goal: design the best way to deliver power for everyday use — the plug you
 
 This works it out from scratch. It starts from 230 V AC as today's baseline, then argues for DC in the long run — including places with no grid to inherit, like a Mars city. The conclusion: the connector's control logic and the choice of voltage matter far more than the pin shape.
 
+## The connector in brief
+
+| | |
+|---|---|
+| **Shape** | circular coaxial, push-pull self-latching |
+| **Control** | active — a handshake switches power on only when fully mated, off before it separates |
+| **Current** | DC |
+| **Voltages** | two: 48 V (touch-safe, up to 240 W) · ~400 V (high power, up to ~10 kW at 25 A) |
+| **Conductors** | 2 power (center +, outer −) + a handshake/earth ring |
+| **Orientation** | reversible at any angle |
+| **Size** | ~12 mm outer diameter at 48 V · ~26 mm at 400 V; scales by diameter |
+| **Sealing** | single O-ring, IPX6–IPX7 (wet and dust) |
+| **Materials** | brass pin, beryllium-copper spring contacts, silver/gold plating, PPS/LCP insulator |
+| **Range** | home use up to ~25 A / 10 kW; hand off to NACS above that |
+
 ## Decisions at a glance
 
 The whole design in five points, each explained below.
