@@ -1,6 +1,8 @@
 # Power delivery from first principles + ideal DC connector
 
-How should we send power to a home appliance (vacuum, fridge, etc.)? This works it out from scratch. It starts from 230 V AC as the existing baseline, then argues for DC in the long run — including places with no grid to inherit, like a Mars city. The conclusion: the connector's control logic and the choice of voltage matter far more than the pin shape.
+The goal: design the best way to deliver power for everyday use — the plug you use at home dozens of times a day for a vacuum, fridge, lamp, or laptop. Maybe factories too, though that's less certain (higher power, rougher conditions).
+
+This works it out from scratch. It starts from 230 V AC as today's baseline, then argues for DC in the long run — including places with no grid to inherit, like a Mars city. The conclusion: the connector's control logic and the choice of voltage matter far more than the pin shape.
 
 ## Decisions at a glance
 
