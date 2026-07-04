@@ -6,18 +6,19 @@ This works it out from scratch. It starts from 230 V AC as today's baseline, the
 
 ## The connector in brief
 
-| | |
-|---|---|
-| **Shape** | circular coaxial, push-pull self-latching |
-| **Control** | active — a handshake switches power on only when fully mated, off before it separates |
-| **Current** | DC |
-| **Voltages** | two: 48 V (touch-safe, up to 240 W) · ~400 V (high power, up to ~10 kW at 25 A) |
-| **Conductors** | 2 power (center +, outer −) + a handshake/earth ring |
-| **Orientation** | reversible at any angle |
-| **Size** | ~12 mm outer diameter at 48 V · ~26 mm at 400 V; scales by diameter |
-| **Sealing** | single O-ring, IPX6–IPX7 (wet and dust) |
-| **Materials** | brass pin, beryllium-copper spring contacts, silver/gold plating, PPS/LCP insulator |
-| **Range** | home use up to ~25 A / 10 kW; hand off to NACS above that |
+| Feature | What it is | Why |
+|---|---|---|
+| **Shape** | circular coaxial, push-pull self-latching | [why](#shape) |
+| **Control** | active — a handshake switches power on only when fully mated, off before it separates | [why](#decision-1-active-dead-front-the-connector-switches-its-own-power) |
+| **Current** | DC | [why](#decision-2-dc-not-ac) |
+| **Voltages** | two: 48 V (touch-safe, up to 240 W) · ~400 V (high power, up to ~10 kW at 25 A) | [why](#decision-3-two-voltages-48-v-touch-400-v-power) |
+| **Default mode** | dumb devices get 48 V via a resistor on the handshake pin (like USB-C); 400 V needs an active chip | [why](#decision-4-standards-reuse-on-earth-one-negotiating-connector-where-theres-no-legacy) |
+| **Conductors** | 2 power (center +, outer −) + a handshake/earth ring | [why](#shape) |
+| **Orientation** | reversible at any angle | [why](#shape) |
+| **Size** | ~12 mm outer diameter at 48 V · ~26 mm at 400 V; scales by diameter | [why](#engineering-detail) |
+| **Sealing** | single O-ring, IPX6–IPX7 (wet and dust) | [why](#water-resistance-ip-bathrooms-outdoors) |
+| **Materials** | brass pin, beryllium-copper spring contacts, silver/gold plating, PPS/LCP insulator | [why](#materials) |
+| **Range** | home use up to ~25 A / 10 kW; hand off to NACS above that | [why](#shape) |
 
 ## Decisions at a glance
 
@@ -78,6 +79,17 @@ Everything else follows from these two and the hazards they create.
 
     Shrouds, sleeves and shutters are partial fixes; dead-front is the full one. It needs an active connector — one that decides when to switch power on. With it, two of the five hazards (shock and arcing) are removed rather than mitigated. As Decision 2 shows, it also removes the last real obstacle to DC.
 
+??? note "Why unplugging a live connector is safe"
+    It relies on the electronics cutting power, with the geometry guaranteeing the order — not on the shape interrupting current by itself.
+
+    1. The handshake ring is **recessed deepest**, so on withdrawal it is always the *first* contact to break. That order is set by geometry, not by timing luck.
+    2. Losing the handshake is the trigger: the outlet's SiC switch opens in **microseconds**, killing the DC rings while they are **still inside the shell**, not yet exposed.
+    3. The DC power rings then separate a few mm later — **milliseconds** at hand speed — already dead. No arc, and nothing live is ever exposed.
+
+    The margin is huge: microseconds to switch off versus milliseconds of travel to separate. So we don't ask the shape to break current (that's the AC-arc problem) — we ask the electronics to break it and the shape to sequence the trigger first. The same interlock makes half-insertion safe: the handshake is the last contact to make, so power never comes on until seating is complete.
+
+    If the switch failed shorted, the rings would separate live — so they stay shrouded through the break (a failed switch arcs *inside* the shell, not at the exposed face) and the handshake loop monitors continuously. The active switch is the primary safety; the shroud is the backstop.
+
 ### Decision 2 — DC, not AC
 
 **Verdict:** where there's no existing grid to match, use DC. The two reasons AC won in 1890 are both obsolete, and most loads already run on DC internally.
@@ -136,6 +148,13 @@ Everything else follows from these two and the hazards they create.
 
     - **Earth (legacy):** reuse what's already standard (see [Standards](../standards.md)) — **USB-C** (≤240 W) and **NACS** (high power; already AC+DC, dead-front-class, latching). The "two" are two existing standards, not two inventions.
     - **Mars (no legacy):** the case against new standards is weakest here. This is the one place a single unified connector is worth inventing, because it replaces all the earlier ones. One connector, one protocol, voltage negotiated like USB-C PD (5→48 V) with the ceiling raised to 400 V. The two ranges become two negotiated states of one standard.
+
+??? note "Dumb devices: a resistor on the handshake pin, like USB-C"
+    A device with no brain just puts a **resistor on the handshake (CC) pin**. The outlet reads it and delivers the **default 48 V tier** at a default current — no chip, no firmware. This is the same trick USB-C uses for basic sinks.
+
+    - No valid signature → the outlet stays dead. A resistor is the minimum needed to get any power at all.
+    - The 400 V tier is never a default. It comes on only after an active chip negotiates it *and* the isolation check passes.
+    - So a dumb device can only ever get the touch-safe 48 V. You cannot accidentally pull 400 V.
 
 ---
 
