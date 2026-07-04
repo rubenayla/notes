@@ -13,52 +13,49 @@
     .edge{stroke:#455A64;stroke-width:1.6;fill:none;marker-end:url(#a2)}
   </style>
   <rect width="980" height="430" fill="#ffffff"/>
-  <text x="30" y="36" class="h">Two-tier DC home / Mars architecture</text>
-  <text x="30" y="56" class="s">Physics forces two voltage regimes (P=V·I, safe-V caps power). Both already have blessed standards — zero new ones needed on Earth.</text>
+  <text x="30" y="36" class="h">DC home / Mars architecture — one 400 V bus</text>
+  <text x="30" y="56" class="s">One central unit makes one bus. Sockets switch and monitor; nothing in the walls converts. USB-C below ~240 W, NACS above 10 kW.</text>
 
   <!-- sources -->
   <rect x="30" y="150" width="120" height="50" class="src" rx="6"/><text x="90" y="172" class="bt">Solar PV</text><text x="90" y="190" class="bs">DC</text>
   <rect x="30" y="215" width="120" height="50" class="src" rx="6"/><text x="90" y="237" class="bt">Battery</text><text x="90" y="255" class="bs">DC</text>
 
+  <!-- central unit -->
+  <rect x="178" y="160" width="144" height="95" fill="#CFD8DC" stroke="#607D8B" rx="6"/>
+  <text x="250" y="196" class="bt">Central unit</text>
+  <text x="250" y="214" class="bs">all conversion, once</text>
+  <text x="250" y="230" class="bs">panel + inverter in one</text>
+  <line x1="150" y1="175" x2="176" y2="185" class="edge"/>
+  <line x1="150" y1="240" x2="176" y2="230" class="edge"/>
+
   <!-- 400V bus -->
-  <rect x="230" y="120" width="40" height="180" fill="#E53935"/>
-  <text x="250" y="110" class="bt" fill="#E53935">~400 V DC bus</text>
-  <line x1="150" y1="175" x2="228" y2="175" class="edge"/>
-  <line x1="150" y1="240" x2="228" y2="240" class="edge"/>
+  <rect x="360" y="105" width="34" height="230" fill="#E53935"/>
+  <text x="377" y="92" class="bt" fill="#E53935">~400 V DC bus</text>
+  <line x1="322" y1="207" x2="358" y2="207" class="edge"/>
 
-  <!-- 400V loads -->
-  <rect x="360" y="120" width="150" height="44" class="load" rx="6"/><text x="435" y="140" class="bt">EV charge</text><text x="435" y="157" class="bs">NACS · 100s A</text>
-  <rect x="360" y="174" width="150" height="44" class="load" rx="6"/><text x="435" y="194" class="bt">Heat pump / oven</text><text x="435" y="211" class="bs">coaxial · ≤25 A</text>
-  <rect x="360" y="228" width="150" height="44" class="load" rx="6"/><text x="435" y="248" class="bt">Fridge</text><text x="435" y="265" class="bs">coaxial</text>
-  <line x1="270" y1="142" x2="358" y2="142" class="edge"/>
-  <line x1="270" y1="196" x2="358" y2="196" class="edge"/>
-  <line x1="270" y1="250" x2="358" y2="250" class="edge"/>
-  <text x="320" y="300" class="bs">dead-front outlets</text>
-
-  <!-- DC/DC -->
-  <rect x="360" y="315" width="150" height="50" fill="#CFD8DC" stroke="#607D8B" rx="6"/>
-  <text x="435" y="337" class="bt">DC/DC</text><text x="435" y="354" class="bs">400 → 48 V</text>
-  <path d="M250 300 V340 H358" class="edge"/>
-
-  <!-- 48V bus -->
-  <rect x="585" y="315" width="34" height="50" fill="#1E88E5"/>
-  <text x="602" y="385" class="bt" fill="#1E88E5">48 V bus</text>
-  <line x1="510" y1="340" x2="583" y2="340" class="edge"/>
-
-  <!-- 48V loads -->
-  <rect x="690" y="300" width="150" height="40" class="load" rx="6"/><text x="765" y="318" class="bt">USB-C outlets</text><text x="765" y="334" class="bs">≤240 W</text>
-  <rect x="690" y="348" width="150" height="40" class="load" rx="6"/><text x="765" y="366" class="bt">Lights · electronics</text><text x="765" y="382" class="bs">touch-safe</text>
-  <line x1="619" y1="320" x2="688" y2="320" class="edge"/>
-  <line x1="619" y1="360" x2="688" y2="368" class="edge"/>
+  <!-- loads -->
+  <rect x="470" y="110" width="215" height="46" class="load" rx="6"/><text x="577" y="130" class="bt">Every appliance</text><text x="577" y="147" class="bs">one coaxial connector · ≤25 A / 10 kW</text>
+  <rect x="470" y="168" width="215" height="46" class="load" rx="6"/><text x="577" y="188" class="bt">Home EV charge</text><text x="577" y="205" class="bs">same connector · ≤10 kW</text>
+  <rect x="470" y="226" width="215" height="46" class="load" rx="6"/><text x="577" y="246" class="bt">USB-C at point of use</text><text x="577" y="263" class="bs">faceplate / brick · 400 V → PD · ≤240 W</text>
+  <rect x="470" y="284" width="215" height="46" class="load" rx="6"/><text x="577" y="304" class="bt">Public fast charge</text><text x="577" y="321" class="bs">NACS · 100s of A (off-home)</text>
+  <line x1="394" y1="133" x2="468" y2="133" class="edge"/>
+  <line x1="394" y1="191" x2="468" y2="191" class="edge"/>
+  <line x1="394" y1="249" x2="468" y2="249" class="edge"/>
+  <text x="430" y="360" class="bs" text-anchor="start"></text>
 
   <!-- annotations -->
-  <text x="600" y="140" class="s" font-weight="700">High tier — ~400 V</text>
-  <text x="600" y="160" class="s">10 kW at only 25 A → thin cable.</text>
-  <text x="600" y="178" class="s">Always behind dead-front.</text>
-  <text x="600" y="196" class="s">Reuse NACS (EV) + coaxial</text>
-  <text x="600" y="214" class="s">family (appliances).</text>
+  <text x="700" y="120" class="s" font-weight="700">One voltage, negotiated current</text>
+  <text x="700" y="140" class="s">10 kW at only 25 A → thin cable.</text>
+  <text x="700" y="158" class="s">Every socket: dead-front SiC switch +</text>
+  <text x="700" y="176" class="s">residual-current + DC arc-fault monitor.</text>
+  <text x="700" y="194" class="s">Sockets never convert — a switch,</text>
+  <text x="700" y="212" class="s">not a power supply.</text>
 
-  <text x="690" y="250" class="s" font-weight="700">Low tier — 48 V</text>
-  <text x="690" y="268" class="s">Touch-safe (wet hands).</text>
-  <text x="690" y="286" class="s">Reuse USB-C PD. No new standard.</text>
+  <text x="700" y="250" class="s" font-weight="700">Below ~240 W — USB-C</text>
+  <text x="700" y="268" class="s">Touch-safe, already universal.</text>
+  <text x="700" y="286" class="s">Made from the bus where it's used.</text>
+
+  <text x="700" y="324" class="s" font-weight="700">Above 10 kW — NACS</text>
+  <text x="700" y="342" class="s">Hundreds of amps needs coolable</text>
+  <text x="700" y="360" class="s">side-by-side pins, not coaxial.</text>
 </svg>

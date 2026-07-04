@@ -95,3 +95,17 @@ The `ideas/power-delivery-dc-connector.md` page describes **one single connector
 **Accepted trade-off:** the universal connector is bigger than USB-C (~26 mm OD) because it must also carry 25 A. One-connector-ness is worth more than compactness — that's the whole point of the page.
 
 **Do NOT** "solve" any size/mismatch tension by introducing keyed, non-intermateable sizes (an XT30/60/90-style family). That directly violates the one-connector requirement. The correct answer to "a small plug and a big plug can't mate" is: there is no small and big — there is one size, sized for the max, with the difference handled by negotiation.
+
+## 2026-07-05 — DC connector: dropped the 48 V tier; single 400 V, USB-C below, NACS above
+
+The design was revised to **one distributed voltage**. The 48 V tier is gone. Current state:
+
+- **~400 V DC at every socket, current negotiated up to 25 A (10 kW).** Still ONE connector (the 2026-07-05 entry above stands) — what changed is that it no longer has a 48 V negotiated state.
+- **Low power (below ~240 W) is USB-C's job**, converted from the 400 V bus at the point of use (faceplate or brick = today's charger minus its rectifier front-end). Rationale: USB-C already won that range; a 48 V tier would compete with it for nothing.
+- **Why every way to deliver a 48 V tier lost:** per-socket 400→48 conversion needs a galvanically isolated supply (touch-safe = isolated; a failed buck transistor would put 400 V on the pins) — at the connector's 25 A that's a 1.2 kW, ~$30–50, 25–35 W-of-heat unit hidden in every socket. A second 48 V house bus was workable (~$100–300 copper) but duplicates USB-C.
+- **No dumb mode.** With no touch-safe default to hand out, no signature → socket stays dead; every device carries a ~$0.30 negotiation chip (every load at this voltage already has electronics — LED bulbs run off ~325 V rectified today).
+- **Cord safety without a touch-safe tier:** per-socket residual-current monitoring (ms trip) + DC arc-fault detection (mandatory in PV, same silicon) + dead-front. EV charging is the precedent for handled 400 V cables.
+- **10 kW everywhere is a feature:** appliances today are designed down to the plug (same kettle: 3 kW UK / 1.5 kW US). The remaining limits are cord ergonomics and home service capacity, the latter managed by negotiation (grant/throttle) instead of tripping breakers.
+- **Sockets never convert** — SiC dead-front gate + handshake + monitoring only. All conversion is central (one home unit) or at the point of use.
+
+Key requirement language from the user: the connector's upper limit is **10 kW, not any lower number** — do not restate device-category ceilings (e.g. "handhelds top at 2 kW") as design limits; today's appliance ceilings are artifacts of today's plugs.

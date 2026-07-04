@@ -9,15 +9,15 @@ This works it out from scratch. It starts from 230 V AC as today's baseline, the
 | Feature | What it is | Why |
 |---|---|---|
 | **Shape** | circular coaxial, push-pull self-latching | [why](#shape) |
-| **Control** | active — a handshake switches power on only when fully mated, off before it separates. Dumb devices default to 48 V via a resistor on the handshake pin (like USB-C); 400 V needs an active chip | [why](#decision-1-active-dead-front-the-connector-switches-its-own-power) |
+| **Control** | active — a handshake switches power on only when fully mated, off before it separates. Every device negotiates (a ~$0.30 chip); no valid signature → the socket stays dead | [why](#decision-1-active-dead-front-the-connector-switches-its-own-power) |
 | **Current** | DC | [why](#decision-2-dc-not-ac) |
-| **Voltages** | one connector, two negotiated states: 48 V (touch-safe, up to 240 W) · ~400 V (high power, up to ~10 kW at 25 A) | [why](#decision-3-two-voltages-48-v-touch-400-v-power) |
+| **Voltage** | one: **~400 V DC**, current negotiated up to 25 A (10 kW). Low power (below ~240 W) is USB-C's job, converted from the bus at the point of use | [why](#decision-3-one-voltage-400-v-dc) |
 | **Conductors** | 4, from the center out: + pin, − ring, a handshake ring, and an outer earth shell (which also shields) | [why](#shape) |
 | **Orientation** | reversible at any angle | [why](#shape) |
 | **Size** | one size, ~26 mm outer diameter, built for the home max (400 V, 25 A); small loads use the same plug, over-provisioned | [why](#shape) |
 | **Sealing** | single O-ring, IPX6–IPX7 (wet and dust) | [why](#water-resistance-ip-bathrooms-outdoors) |
 | **Materials** | brass pin, beryllium-copper spring contacts, silver/gold plating, PPS/LCP insulator | [why](#materials) |
-| **Range** | home use up to ~25 A / 10 kW; hand off to NACS above that | [why](#shape) |
+| **Range** | from where USB-C ends (~240 W) to where NACS begins (~25 A / 10 kW) | [why](#shape) |
 
 ## Decisions at a glance
 
@@ -25,8 +25,8 @@ The whole design in five points, each explained below.
 
 1. **Active dead-front** — the metal stays dead until a handshake confirms full mating. Removes both shock and arcing.
 2. **DC, not AC** — the two reasons AC won in 1890 are obsolete, and most loads already run on DC inside.
-3. **Two voltages** — 48 V DC for touch-safe low power, ~350–400 V DC for high power. Nothing in between.
-4. **No new standards on Earth** — USB-C up to 240 W, NACS for high power. One negotiating connector where there's no legacy (Mars).
+3. **One voltage** — ~400 V DC at every socket, current negotiated up to 25 A (10 kW). No second voltage in the walls; low power stays on USB-C, made from the bus at the point of use.
+4. **No new standards on Earth** — USB-C up to 240 W, NACS for EV fast charge. One negotiating connector for the gap between them where there's no legacy (Mars).
 5. **The connector shape comes last** — circular coaxial, push-pull, dead-front. Easy once the above are settled.
 
 ## Diagrams
@@ -37,7 +37,7 @@ The whole design in five points, each explained below.
 
 ![Handshake state machine](handshake_state_machine.svg)
 
-![Two-tier DC architecture](system_architecture.svg)
+![DC home architecture — one 400 V bus](system_architecture.svg)
 
 ---
 
@@ -61,13 +61,13 @@ Everything else follows from these two and the hazards they create.
     4. **Tracking / breakdown.** Set by voltage.
     5. **Inrush.** Motors pull 5–10× at start; switching supplies draw a spike charging the input cap. Contacts must not weld.
 
-??? note "Why one voltage can't do everything"
+??? note "Why one voltage can't be both touch-safe and high-power"
     Safety caps the touch voltage at ~50 V; heating caps the current. Their product is a capped power, so **no single voltage is both touch-safe and high-power** (a 3 kW kettle at 48 V draws 62 A). Two responses, and every real system picks one:
 
     - **(a) Accept the hazard and mitigate** — today's 230 V world: polarize, sleeve, shroud, shutter, earth, breaker.
-    - **(b) Split into two voltages** — a touch-safe low one plus a high-power one you don't touch live. The better answer; nobody does it yet because of legacy.
+    - **(b) Split** — a touch-safe low-power domain plus a high-power one you never touch live. The touch-safe half already exists and is universal: **USB-C**. So the split costs nothing new — distribute only the high-power voltage, and make USB power from it at the point of use.
 
-    This is what forces both the two voltages (Decision 3) and the dead-front control (Decision 1).
+    This is what forces the dead-front control (Decision 1) and the division of labor with USB-C (Decision 3).
 
 ### Decision 1 — Active dead-front (the connector switches its own power)
 
@@ -108,27 +108,49 @@ Everything else follows from these two and the hazards they create.
 
     **Cable routing (a real DC win):** an insulated AC cable is a capacitor; AC charges and discharges it continuously, so a charging current flows with no load and eats into the conductor rating on long runs. That's why long underground and undersea links are HVDC and overhead AC uses bare conductors on towers. DC charges the cable capacitance once and then nothing — no charging current, no AC dielectric heating. So **you can fully encapsulate DC cable, any length, and route or bury it anywhere.** The cause is cable capacitance and dielectric loss, not corrosion.
 
-    **Touch safety (a DC win):** at mains frequency, 50/60 Hz AC is near the worst case for fibrillation; DC's threshold is ~2–4× higher in mA. Standards reflect this: the safe "extra-low" ceiling is **50 V AC vs 120 V DC** (dry; both drop when wet). 48 V is the conservative wet-hands choice.
+    **Touch safety (a DC win):** at mains frequency, 50/60 Hz AC is near the worst case for fibrillation; DC's threshold is ~2–4× higher in mA. Standards reflect this: the safe "extra-low" ceiling is **50 V AC vs 120 V DC** (dry; both drop when wet).
 
 ??? note "Mars: no legacy to inherit"
     Mars removes the one strong argument left for AC: existing infrastructure. The sources are DC (PV, batteries, or a rectified reactor), there's no 50/60 Hz grid to match, and a sealed habitat makes fire catastrophic, so you want dead-front and solid-state protection everywhere regardless. So Mars ends up **DC, dead-front everywhere.**
 
-### Decision 3 — Two voltages: 48 V (touch) + ~400 V (power)
+### Decision 3 — One voltage: ~400 V DC
 
-**Verdict:** use two voltages and nothing in between — **48 V DC** for touch-safe low power, **~350–400 V DC** for high power. A single voltage can't be both (see above).
+**Verdict:** distribute a single voltage, **~350–400 V DC**, at every socket, with current negotiated up to 25 A (10 kW). No second voltage anywhere in the walls. Low power (below ~240 W) belongs to USB-C, made from the bus at the point of use.
 
-??? note "Why these two, and why the middle is bad"
-    - **48 V DC — touch-safe, low power.** The highest voltage still safe with wet hands, and the one nearly everyone already settled on (telecom −48, automotive 48, PoE ~48–57, USB-C PD 48). Below it the current gets large; above it you need shock protection. Practical ceiling ≈ 240 W on a USB-C-class conductor.
-    - **~350–400 V DC — high power.** EV packs (400 V class) and datacenters (380 V DC, Open Compute/ETSI) already converged here, so the parts exist (NACS/CCS, converters, protection). 400 V gives **10 kW at 25 A**, keeping cables and contacts reasonable. 800 V halves the current again but raises insulation and hazard — keep it for fast-charging and industrial.
-    - **Avoid ~60–350 V DC as a fixed voltage.** Too high to touch, not high enough to be worth the dead-front effort, and no existing parts. (230 V only sits there for legacy AC.) Voltage negotiation may pass through it, but don't standardize on it.
+??? note "Why 400 V and not something else"
+    - **The parts and the precedent exist.** EV packs (400 V class) and datacenters (380 V DC, Open Compute/ETSI) already converged here, so switches, converters and protection are commodity. 800 V halves the current again but raises insulation and hazard — keep it for fast-charging and industrial.
+    - **10 kW at only 25 A** keeps cables and contacts reasonable. The same 10 kW at 48 V would be 208 A → ~70 mm² garden-hose cable.
+    - **Insulation is the same class as today's.** 230 V AC peaks at 325 V every cycle; 400 V DC is only ~23 % higher, within the same IEC 60664 design levels. No exotic materials.
+    - **Not something lower.** 60–350 V is too high to touch but buys no more power headroom than 400 V parts already give, and has no ecosystem (230 V only sits there for legacy AC).
+
+??? note "Why there is no 48 V tier (earlier versions had one)"
+    Earlier versions of this design distributed a touch-safe 48 V tier alongside 400 V. Every way to deliver it loses:
+
+    - **A 400→48 V converter in every socket:** for 48 V to be genuinely touch-safe it must be galvanically isolated from the bus (a non-isolated buck puts 400 V on the "safe" pins the first time a transistor fails shorted). A converter that serves the connector's full 25 A at 48 V (1.2 kW, isolated) is ~$30–50 of parts dissipating 25–35 W in a closed wall box — a real power supply, and a failure point, hidden in every one of ~40 sockets per home.
+    - **A second 48 V bus from the central unit:** workable (~$100–300 of extra copper, four power conductors at every box), but it duplicates something that already exists…
+    - **USB-C already owns low power.** Below 240 W there is nothing to invent: the ecosystem, the negotiation and the touch-safe connector all exist and are universal. A 48 V tier on this connector would compete with USB-C in the one range where USB-C already won.
+
+    So low power is USB-C, fed from the 400 V bus by converters at the point of use — a faceplate or a brick, which is today's charger minus its rectifier front-end. The new connector's scope is exactly the gap: **from where USB-C ends to where NACS begins.**
+
+??? note "Cord safety without a touch-safe tier"
+    The 48 V tier's real job was the damaged-cord case: vacuums, tools and blenders whose cords get yanked, pinched and rolled over now carry 400 V. Three layers cover it:
+
+    1. **Residual-current monitoring per socket** trips at milliamp leakage in milliseconds — a damaged cord de-energizes before it is a shock hazard. Same protection class as today's 230 V handhelds behind an RCD (residual-current device), but per-socket and faster.
+    2. **DC arc-fault detection.** This is the failure DC is genuinely worse at: a DC arc has no zero-crossing to self-extinguish, so a damaged cord is a fire risk. The solar industry solved detection at 400 V DC years ago (arc-fault interrupters are mandatory in PV); the same silicon goes in every socket.
+    3. **Dead-front** covers the connector interface itself. EV charging already proves untrained people can handle monitored 400 V cables in the rain.
+
+    Net: no worse than today's 230 V world, and safer at the connector.
+
+??? note "10 kW at every socket is a feature, not headroom"
+    Today's appliances are designed *down to the plug*: the same kettle sells at 3 kW in the UK (13 A plug) and 1.5 kW in the US (15 A × 120 V); hairdryers cluster at 1.8–2.2 kW because that's what the weakest common socket delivers. Give every socket 10 kW and appliances follow — a kettle that boils a liter in ~40 s, faster dryers, real power tools indoors.
+
+    The limits that remain are the honest ones, and neither is the connector:
+
+    - **Cord and device physics.** 25 A needs ~4 mm² conductors, so a 10 kW handheld drags an EV-grade cable and carries its own mass. Ergonomics caps handhelds below the connector's limit — the right place for that limit to live.
+    - **Home service capacity.** Several 10 kW sockets can't all fire at once on a normal supply. But sockets *negotiate*: the central unit grants what's available and a device throttles or waits instead of tripping a circuit dark. Load management becomes a protocol feature instead of a failure mode.
 
 ??? note "Does a vacuum really run at 400 V? Yes — worked example"
-    A corded vacuum is ~1–2 kW. Run the two voltages:
-
-    - **On 48 V:** 1 kW = **21 A** (2 kW = 42 A) → 4 mm²+ cable and a chunky high-force connector. That's well past the low tier's point (touch-safe, USB-C-class, ≤5 A / 240 W). So it *can't* be a low-tier appliance.
-    - **On 400 V:** 1 kW = **2.5 A** → thin cable, small pin. Easy.
-
-    So the vacuum lands on the high tier — not because 400 V is *needed* for the power, but because the low tier is deliberately capped at touch-safe low current. Most home high-power loads (kettle, microwave, hairdryer, washer, iron) land here for the same reason; the 48 V tier is electronics, lighting, and small stuff.
+    A corded vacuum is ~1–2 kW → **2.5–5 A at 400 V**: thin cable, small pin. (At 48 V the same power would be 21–42 A — one reason the touch-safe tier lost its place.)
 
     **Is 400 V DC unreasonable for a home appliance? No — three reasons:**
 
@@ -136,24 +158,24 @@ Everything else follows from these two and the hazards they create.
     2. **The appliance already runs on it.** A modern vacuum's BLDC/universal-motor drive **rectifies mains to a ~325–400 V DC bus** internally (with power-factor correction, a regulated ~390–400 V bus). Feeding 400 V DC directly just **deletes the rectifier and PFC front-end** — you hand the motor controller the exact bus voltage it already makes.
     3. **You never touch it.** Dead-front (Decision 1) means the 400 V is dead until fully mated and de-energized before separating — you can't touch it live. Today's 230 V AC is the opposite: exposed pins on withdrawal, live sockets. So despite the higher number, the **shock risk is lower**, not higher.
 
-    The cost: the vacuum's cable and connector are on the "don't touch it live" side, so they depend entirely on the dead-front interlock working. That's the trade the whole design makes — moving safety from geometry you hope holds to control that keeps the metal dead.
+    The cost: the vacuum's cable and connector are on the "don't touch it live" side, so they depend on the interlock and the per-socket monitoring (residual-current + arc-fault, above) working. That's the trade the whole design makes — moving safety from geometry you hope holds to control that keeps the metal dead.
 
 ### Decision 4 — Standards: reuse on Earth, one negotiating connector where there's no legacy
 
-**Verdict:** physics forces two voltage ranges, but that needn't mean any new standards. On Earth, reuse USB-C and NACS. On Mars, a single unified connector is worth inventing because it replaces all the others.
+**Verdict:** physics splits power delivery into a touch-safe range and a high-power range, but that needn't mean any new standards. On Earth, reuse USB-C and NACS. On Mars, one new connector is worth inventing for the gap between them, because it replaces mains.
 
 ??? note "Why — two ranges needn't mean two inventions"
-    Physics forces two voltage ranges (unavoidable — `P=VI` plus the safety cap). But that needn't cost any new standards:
+    Physics forces the touch-safe/high-power split (unavoidable — `P=VI` plus the safety cap). But that needn't cost any new standards:
 
     - **Earth (legacy):** reuse what's already standard (see [Standards](../standards.md)) — **USB-C** (≤240 W) and **NACS** (high power; already AC+DC, dead-front-class, latching). The "two" are two existing standards, not two inventions.
-    - **Mars (no legacy):** the case against new standards is weakest here. This is the one place a single unified connector is worth inventing, because it replaces all the earlier ones. One connector, one protocol, voltage negotiated like USB-C PD (5→48 V) with the ceiling raised to 400 V. The two ranges become two negotiated states of one standard.
+    - **Mars (no legacy):** the case against new standards is weakest here. This is the one place a new connector is worth inventing — for the gap between USB-C and NACS. One connector, one protocol, one voltage (400 V), current negotiated like USB-C PD. USB-C itself persists even on Mars — every laptop and phone brings it — so the invented connector replaces mains, not USB.
 
-??? note "Dumb devices: a resistor on the handshake pin, like USB-C"
-    A device with no brain just puts a **resistor on the handshake (CC) pin**. The outlet reads it and delivers the **default 48 V tier** at a default current — no chip, no firmware. This is the same trick USB-C uses for basic sinks.
+??? note "No dumb mode — every device negotiates"
+    Earlier versions gave dumb devices a resistor-signature default (USB-C's trick for basic sinks), which made sense when there was a touch-safe 48 V default to hand out. With only 400 V behind the socket there is nothing safe to deliver by default, so:
 
-    - No valid signature → the outlet stays dead. A resistor is the minimum needed to get any power at all.
-    - The 400 V tier is never a default. It comes on only after an active chip negotiates it *and* the isolation check passes.
-    - So a dumb device can only ever get the touch-safe 48 V. You cannot accidentally pull 400 V.
+    - **No valid signature → the socket stays dead.** Power comes on only after the chip negotiates *and* the isolation check passes.
+    - Every device carries a negotiation chip (~$0.30). That's not a real cost at this voltage: every load already has electronics — an LED bulb today runs off ~325 V rectified mains through its own driver. A "dumb" 400 V device doesn't exist.
+    - Genuinely dumb, chipless devices are USB-C's territory (its resistor default survives there, at touch-safe voltage).
 
 ---
 
@@ -172,7 +194,7 @@ With the architecture fixed, the pin geometry is the easy part, and dead-front r
 - **Push-pull latch (Lemo/Fischer-style):** push in → a click means fully seated, and only then does the handshake complete and power come on (seating is tied to power, so a half-insertion is dead by construction). Pull the outer sleeve to release; no twisting a stiff cable.
 - **One circular gasket** → wet- and dust-proof (Mars regolith, bathrooms, outdoors).
 - **Self-shielding** (outer conductor shields the inner) → low EMI.
-- **One connector, one size — the range is handled by negotiation, not by swapping plugs.** It's built once for the home maximum (400 V, 25 A / 10 kW; Ø4 mm center pin, ~26 mm OD, insulated for 400 V). The *same* plug runs a phone at 48 V and a fraction of an amp and a 10 kW load at 400 V / 25 A — voltage and current are negotiated electronically (USB-C PD style), so everything intermates. A small load just over-provisions the connector, the way a wall socket powers a phone charger today. This is the whole point: one universal plug, not a family of sizes. The connector is bigger than USB-C because it must also carry 25 A — that's the accepted cost of it being the only one you need.
+- **One connector, one size — the range is handled by negotiation, not by swapping plugs.** It's built once for the home maximum (400 V, 25 A / 10 kW; Ø4 mm center pin, ~26 mm OD, insulated for 400 V). The *same* plug runs a lamp at a fraction of an amp and a 10 kW load at 25 A — current is negotiated electronically (USB-C PD style), so everything intermates. A small load just over-provisions the connector, the way a wall socket powers a phone charger today. This is the whole point: one universal plug, not a family of sizes. The connector is bigger than USB-C because it must carry 25 A — that's the accepted cost of it being the only one you need.
 - **Contacts:** sprung beryllium-copper female (hyperboloid cage on the round center pin) for low, stable resistance under load; silver-plated power surfaces, gold flash on the handshake ring. Phosphor-bronze (CuSn6) as the cheaper spring.
 - **Limit:** coaxial traps the inner conductor's heat, so it's good to ~25 A / 10 kW (all home appliances). Above that (EV fast-charge, hundreds of amps) separated side-by-side pins cool better — that's NACS's domain. Simple split: coaxial for home, NACS for EV-scale.
 
@@ -198,14 +220,14 @@ The numbers behind the recommendation. Open what you need.
 ??? note "Sizing — one connector, the cable is what varies"
     The connector is built once for the home maximum — **Ø4 mm center pin, ~26 mm OD, insulated for 400 V, rated 25 A**. Only the *cable* changes with what a device actually draws; the plug is identical. Using the [Standards](../standards.md) wire table (2 mm⌀ ≈ 4 mm² ≈ 30 A; 1 mm⌀ ≈ 0.75 mm² ≈ 16 A; 0.5 mm⌀ ≈ 0.25 mm² ≈ 6 A) and ρ_Cu ≈ 0.0172 Ω·mm²/m:
 
-    | Device draw | typical negotiated V · I | cable gauge (same connector) |
+    | Device draw | negotiated current at 400 V | cable gauge (same connector) |
     |---|---|---|
-    | Small (phone, lamp) | 48 V · ≤5 A | 0.5 mm² (≈20–22 AWG) |
-    | Full load (kettle, home EV) | 400 V · 25 A | 2.5–4 mm² (≈14–12 AWG) |
+    | Small (lamp, fridge) | well under 1 A | 0.5 mm² (sized by mechanical robustness, not current) |
+    | Full load (kettle, home EV) | 25 A | 2.5–4 mm² (≈14–12 AWG) |
 
     - **Sized by heat, not voltage drop.** 25 A over 5 m of 2.5 mm² drops ~1.7 V = 0.4 %. Negligible.
-    - **Why 400 V for the big loads, in one number:** the same 10 kW at 48 V would be **208 A → ~70 mm² cable** (garden-hose thick). 400 V buys an 8× thinner conductor.
-    - **A small device just pairs the same plug with a thinner cable:** 5 A / 3 m / 0.5 mm² ≈ 1 V ≈ 2 % drop. It never draws the full 25 A, but the connector is over-provisioned so it still fits every socket.
+    - **Why 400 V, in one number:** the same 10 kW at 48 V would be **208 A → ~70 mm² cable** (garden-hose thick). 400 V buys an 8× thinner conductor.
+    - **A small device just pairs the same plug with a thinner cable.** A 100 W load draws 0.25 A; it never comes near the full 25 A, but the connector is over-provisioned so it fits every socket.
     - **Center pin Ø4 mm** (banana-plug class, rated 20–32 A) carries the full 25 A and fixes the connector's size for every device.
     - **Contact spec is force-over-life, not area.** At 25 A a 1 mΩ contact dissipates 0.6 W locally — fine if the spring holds force, dangerous if it relaxes (the Peru fire). → beryllium-copper hyperboloid (Multilam) female on the round pin: many parallel line-contacts, stable mΩ, thousands of cycles. Above ~25 A / 10 kW the inner conductor's trapped heat says hand off to NACS's coolable side-by-side pins.
 
@@ -238,23 +260,22 @@ The numbers behind the recommendation. Open what you need.
 
     1. **IDLE** — DC± dead; PE shell plus a small safe sense voltage on CC (Rp pull-up).
     2. **Mate** — PE makes first (bond), DC± seat *dead*, CC makes **last** (its recess proves "fully seated").
-    3. **DETECT** — device presents a known CC signature (resistor for dumb loads, chip for smart).
-    4. **NEGOTIATE** — device states its voltage (48/400 V) and max current over CC.
-    5. **ISOLATION CHECK** (400 V only) — verify no leakage before closing, like CCS before contactor close.
+    3. **DETECT** — device presents a valid CC signature (a chip; no signature → the socket stays dead).
+    4. **NEGOTIATE** — device states its max current over CC (the voltage is fixed at 400 V).
+    5. **ISOLATION CHECK** — verify no leakage before closing, like CCS before contactor close.
     6. **ENERGIZE** — close the SiC solid-state switch with **soft-start** (ramps the voltage → absorbs inrush, no weld).
     7. **MONITOR** (loop) — current, ground-fault, arc-fault, over-temp, CC keepalive.
     8. **Unplug** — CC breaks **first** → SiC opens in **microseconds** → DC± separate already dead (no arc) → PE breaks last.
 
     Rule: **DC± is live only when fully mated, validated, and fault-free.** Shock and arc are designed out, not mitigated. The per-outlet SiC switch also replaces the breaker — faster, resettable, per-socket.
 
-??? note "Where the voltage is made: central bus, per-socket switching"
-    The heavy regulation is central; each socket only switches and does a small step-down.
+??? note "Where the voltage is made: one central bus, sockets only switch"
+    All conversion is central or at the point of use; **nothing in the walls converts.**
 
-    - **One central home unit** (it replaces the breaker panel and inverter) takes PV, battery, or grid and produces the regulated **400 V DC house bus**. All the heavy conversion happens once, here — that's the efficiency win, and it's where the source is managed (PV tracking, battery charge/discharge, grid rectification).
-    - **400 V runs to every socket** on thin cable (400 V = low current). There is **no second house-wide 48 V bus** — 48 V over house distances would need fat copper, the exact problem 400 V avoids.
-    - **Each socket switches; it doesn't do the heavy regulation.** It has the SiC dead-front gate, the handshake controller, and fault monitoring — cheap silicon that replaces today's breaker with a smarter per-socket one. A device that negotiates **400 V** gets the bus gated straight through (no converter). A device that negotiates **48 V** (or a dumb device defaulting to it) is fed by a **small 400→48 V step-down in the socket** (≤240 W, USB-C-charger-sized), which only runs for small loads and is off when idle.
-
-    So: pre-regulated 400 V from one central device, distributed everywhere; per-socket electronics that gate 400 V through and make 48 V locally for the touch-safe/default path. The bulky magnetics stay central; the socket carries only a switch and a small buck. And a device that wants, say, 5 V converts it straight from 400 V in one step — you never step 400→48 and then 48→5.
+    - **One central home unit** (it replaces the breaker panel and inverter) takes PV, battery, or grid and produces the regulated **400 V DC house bus**. All conversion happens once, here — that's the efficiency win, and it's where the source is managed (PV tracking, battery charge/discharge, grid rectification).
+    - **400 V runs to every socket** on thin cable. There is no second bus and no converter in any socket.
+    - **Each socket is a switch, not a power supply:** the SiC dead-front gate, the handshake controller, and the monitoring (residual-current, arc-fault, over-temp) — cheap silicon that replaces today's breaker with a smarter, faster, per-socket one. It gates the bus through; it never converts it.
+    - **Low voltages are made at the point of use.** A USB-C faceplate or brick converts 400 V → USB-C PD right where it's needed (that brick is today's charger minus its rectifier front-end, so slightly smaller and cheaper). A device on the connector converts 400 V → its internal rails in one step — you never step 400→48 and then 48→5.
 
 ## Materials
 
@@ -272,17 +293,17 @@ The key choices behind that table:
 
 - **The spring must not be brass.** Brass stress-relaxes when it gets hot — it loses clamping force, contact resistance climbs, the joint heats more, and you're on the runaway path that is the "everything goes loose in Peru → fire" `I²R` failure. Beryllium-copper resists stress-relaxation and fatigue best (it's what Stäubli/Multilam hyperboloid contacts use); phosphor-bronze CuSn6 is the cheaper option and gives up some life. This is the most safety-critical material choice in the part.
 - **Plating is layered for three jobs.** A nickel underlayer stops the base metal migrating up; **silver** on the power surfaces gives the highest conductivity and self-cleans as the contacts wipe on mating (or tin, if cost matters more); **gold flash** on the low-current handshake ring, where there's no wiping force to break through tarnish, so you need a metal that never tarnishes and holds a stable resistance.
-- **The insulator is specified by number, not by name:** **CTI ≥ 600** (Material Group I — resists surface tracking at voltage in damp, dirty air), **UL94 V-0** (self-extinguishing), and **glow-wire 850–960 °C** (mandatory for an unattended appliance like a fridge). Thermoset (melamine/phenolic) has the best fault-heat behaviour but can't do snap-fit latches; high-temp thermoplastic (PPS, PBT-GF, and LCP for the thin 48 V walls) moulds into latches with good — not thermoset-grade — heat tolerance.
+- **The insulator is specified by number, not by name:** **CTI ≥ 600** (Material Group I — resists surface tracking at voltage in damp, dirty air), **UL94 V-0** (self-extinguishing), and **glow-wire 850–960 °C** (mandatory for an unattended appliance like a fridge). Thermoset (melamine/phenolic) has the best fault-heat behaviour but can't do snap-fit latches; high-temp thermoplastic (PPS, PBT-GF, and LCP for the thinnest walls) moulds into latches with good — not thermoset-grade — heat tolerance.
 - **The one DC-specific point:** steady DC across a wet, exposed contact drives electrolytic migration that eats the metal (AC averages it out). So the mating face wants corrosion-resistant plating — silver or gold over nickel. But dead-front removes the voltage from the exposed face entirely, so this drops from a primary requirement to a minor one.
 
 ---
 
 ## Summary
 
-It's easy to focus on the pin shape, but the decisions that matter are the connector's control (passive mitigation vs active dead-front) and the voltage (legacy 230 AC vs two DC voltages). Choosing dead-front solves shock, arcing, and reversibility at once, and makes AC-vs-DC a simple system choice. The geometry is the small part.
+It's easy to focus on the pin shape, but the decisions that matter are the connector's control (passive mitigation vs active dead-front) and the voltage (legacy 230 AC vs one DC voltage). Choosing dead-front solves shock, arcing, and reversibility at once, and makes AC-vs-DC a simple system choice. The geometry is the small part.
 
 - **Earth, today:** a Type-N-class passive plug with sprung CuBe contacts, sleeved pins, earth-first sequencing, and a detent click — the "mitigate the accepted hazard" answer, correct while we're stuck on legacy AC. Build it dead-front-ready.
-- **Long term / Mars:** two negotiated DC voltages (48 V + ~400 V) through **one** dead-front coaxial push-pull connector — the same plug for phone, lamp, fridge, kettle, and home EV charging, replacing mains, USB-C, and barrel. Only public DC fast-charging (hundreds of amps) stays on NACS.
+- **Long term / Mars:** one DC voltage (~400 V, current negotiated to 25 A) through **one** dead-front coaxial push-pull connector — the same plug for lamp, fridge, kettle, vacuum, and home EV charging, replacing mains. USB-C keeps everything below ~240 W; public DC fast-charging (hundreds of amps) stays on NACS.
 
 ## See also
 

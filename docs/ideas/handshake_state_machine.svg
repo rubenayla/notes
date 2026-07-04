@@ -26,10 +26,10 @@
     <text x="300" y="116" class="bt">DETECT</text><text x="300" y="135" class="bs">read CC signature</text>
 
     <rect x="420" y="90" width="150" height="64" class="box" rx="8"/>
-    <text x="495" y="116" class="bt">NEGOTIATE</text><text x="495" y="135" class="bs">tier 48/400 V · max A</text>
+    <text x="495" y="116" class="bt">NEGOTIATE</text><text x="495" y="135" class="bs">max current at 400 V</text>
 
     <rect x="615" y="90" width="150" height="64" class="box" rx="8"/>
-    <text x="690" y="112" class="bt">ISOLATION</text><text x="690" y="130" class="bs">leakage test</text><text x="690" y="146" class="bs">(400 V only)</text>
+    <text x="690" y="112" class="bt">ISOLATION</text><text x="690" y="130" class="bs">leakage test</text><text x="690" y="146" class="bs">before every energize</text>
 
     <rect x="810" y="90" width="140" height="64" class="box" rx="8" fill="#FFEBEE" stroke="#E53935"/>
     <text x="880" y="112" class="bt">ENERGIZE</text><text x="880" y="130" class="bs">close SiC</text><text x="880" y="146" class="bs">soft-start</text>
@@ -66,7 +66,7 @@
   <text x="350" y="205" class="el" fill="#E53935">fail / timeout</text>
 
   <text x="30" y="360" class="s" font-weight="700">Safety invariant</text>
-  <text x="30" y="382" class="s">DC± is live only after: PE bonded · fully mated (CC made) · device validated · (400 V) isolation passed · no active fault.</text>
+  <text x="30" y="382" class="s">DC± is live only after: PE bonded · fully mated (CC made) · device validated · isolation passed · no active fault.</text>
   <text x="30" y="400" class="s">Any break in that chain opens the SiC switch in microseconds — shock and arc are designed out, not merely mitigated.</text>
   <text x="30" y="418" class="s">The per-outlet SiC switch also replaces the breaker: faster, resettable, per-socket current limiting.</text>
 </svg>

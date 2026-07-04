@@ -83,6 +83,6 @@
   <line x1="646" y1="458" x2="582" y2="402" class="lead"/>
 
   <text x="30" y="540" class="s" font-weight="700">Mate order  PE → DC± (dead) → CC (last).  Break order reverses → pins are dead before they part → no arc.</text>
-  <text x="30" y="562" class="s">OD ≈ 26 mm at 400 V / 25 A / 10 kW.  Scale to OD ≈ 12 mm for the 48 V / 5 A member — same shape, like XT30→XT150.</text>
+  <text x="30" y="562" class="s">OD ≈ 26 mm at 400 V / 25 A / 10 kW.  One size for every device — a small load just over-provisions the same plug.</text>
   <text x="30" y="584" class="s">Center pin Ø4 mm (banana-class, 20–32 A).  Radial walls ≈3 mm = pollution-degree-2 creepage at 400 V.</text>
 </svg>
