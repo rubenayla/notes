@@ -9,10 +9,9 @@ This works it out from scratch. It starts from 230 V AC as today's baseline, the
 | Feature | What it is | Why |
 |---|---|---|
 | **Shape** | circular coaxial, push-pull self-latching | [why](#shape) |
-| **Control** | active — a handshake switches power on only when fully mated, off before it separates | [why](#decision-1-active-dead-front-the-connector-switches-its-own-power) |
+| **Control** | active — a handshake switches power on only when fully mated, off before it separates. Dumb devices default to 48 V via a resistor on the handshake pin (like USB-C); 400 V needs an active chip | [why](#decision-1-active-dead-front-the-connector-switches-its-own-power) |
 | **Current** | DC | [why](#decision-2-dc-not-ac) |
 | **Voltages** | two: 48 V (touch-safe, up to 240 W) · ~400 V (high power, up to ~10 kW at 25 A) | [why](#decision-3-two-voltages-48-v-touch-400-v-power) |
-| **Default mode** | dumb devices get 48 V via a resistor on the handshake pin (like USB-C); 400 V needs an active chip | [why](#decision-4-standards-reuse-on-earth-one-negotiating-connector-where-theres-no-legacy) |
 | **Conductors** | 2 power (center +, outer −) + a handshake/earth ring | [why](#shape) |
 | **Orientation** | reversible at any angle | [why](#shape) |
 | **Size** | ~12 mm outer diameter at 48 V · ~26 mm at 400 V; scales by diameter | [why](#engineering-detail) |
