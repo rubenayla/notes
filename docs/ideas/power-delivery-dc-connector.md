@@ -255,6 +255,16 @@ The numbers behind the recommendation. Open what you need.
 
     A CAD pass with real IEC 60664 creepage/clearance tables and a thermal sim would move these.
 
+??? note "What sets the size (it isn't the copper)"
+    For 25 A you only need ~4 mm² of copper — a solid rod of Ø2.3 mm. The connector is 26 mm. The other ~24 mm of diameter buys four things:
+
+    1. **Contact interfaces, not bulk copper.** The Ø4 mm pin is ~3× the copper ampacity needs. The extra is for the *contact*: landing area and wear allowance for the spring fingers, and metal mass to spread the ~0.6 W the joint dissipates locally (1 mΩ × 25 A²). Contacts are sized by force, wear, and contact heat — not conductor cross-section.
+    2. **Insulation walls — the voltage's cost, and the biggest single item.** Three plastic gaps of ~2–3 mm each (creepage at 400 V in dirty, damp air, plus the ~1–1.5 mm minimum a molded wall needs to not snap). That's ~6.5 mm of the 13 mm radius: half the connector is plastic.
+    3. **The coaxial geometry tax.** Each conductor is a full ring wrapped around everything inside it. The CC ring at 9 mm radius has ~45 mm² of cross-section at only 0.8 mm thickness — ~10× more copper than its signal job needs; its thickness is set by "won't dent," not by current. Concentric layout is what buys any-angle reversibility, one-O-ring sealing, and self-shielding — and diameter is what it charges. The proof: an **XT30** carries the same ~25–30 A with a 500 V rating in a ~13 mm-wide body, because its two pins sit side by side with one wall between them instead of four rings with three. Coaxial roughly doubles the size for the same electrical job — the accepted trade.
+    4. **Mechanics:** the push-pull latch sleeve, the O-ring groove, and enough shell to survive being stepped on.
+
+    So the size scales *weakly* with current (only the pin and contact area grow — 50 A might mean Ø30 mm) and mostly with **voltage and conductor count** through the wall stack. It also has a floor: even at 48 V, the mechanical minimums (moldable walls, latch, sealing) wouldn't let this shape shrink much below ~15 mm. And the 26 mm mockup is conservative — IEC creepage at 400 V, pollution degree 2, material group I is nearer 2 mm than 3, so a real CAD pass with ribbed walls could plausibly land around 20–22 mm.
+
 ??? note "Handshake protocol (USB-C PD logic, scaled to 400 V)"
     Reuse, don't invent: USB-C CC (configuration channel) logic plus a CCS-style isolation check. The control lives in the **wall outlet**; the cable stays cheap (signature chip + contacts).
 
