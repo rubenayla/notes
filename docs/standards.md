@@ -170,6 +170,7 @@ Soldering Iron Tips: T12 style (heater built into the tip)
 - Phoenix Contact M12 Power
     - 630V 16A per pin
     - Push-lock
+- **M12 X-coded** — ruggedized gigabit / 10G Ethernet (screw-lock, IP67, 8-pin / 4 pairs, up to 10 Gb/s; D-code is 4-pin / 2 pairs, 100 Mb/s). RJ45 carries the same signals, so use plain RJ45 on the bench and M12 (or a locking RJ45) once it's bolted to something that vibrates. Phoenix Contact, TE, Amphenol.
 - **WAGO 2601 series** (PCB-to-wire, push-in CAGE CLAMP® with lever, 3.5mm pitch)
     - Replaces screw terminals on PCBs. Hands-free, vibration-resistant, accepts solid + stranded + ferruled wire.
     - Conductor range: 0.2–1.5 mm² (AWG 26–14). Compatible with team-standard 18 AWG / 0.75 mm² wire with headroom.
