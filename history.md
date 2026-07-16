@@ -109,3 +109,13 @@ The design was revised to **one distributed voltage**. The 48 V tier is gone. Cu
 - **Sockets never convert** — SiC dead-front gate + handshake + monitoring only. All conversion is central (one home unit) or at the point of use.
 
 Key requirement language from the user: the connector's upper limit is **10 kW, not any lower number** — do not restate device-category ceilings (e.g. "handhelds top at 2 kW") as design limits; today's appliance ceilings are artifacts of today's plugs.
+
+## 2026-07-16 — tasks.md consolidated to the repo root; `.agents/tasks.md` retired
+
+`.agents/tasks.md` was moved to `tasks.md` at the repo root with `git mv`, so the file's history follows it. `.agents/tasks.md` no longer exists in this repo and must not be recreated — the rule is one `tasks.md` per repo, at the root.
+
+Rationale: tasks are the project's tasks regardless of who does them. Two files named `tasks.md` only produce duplicates and stale entries, because whichever one the current session isn't reading quietly goes out of date.
+
+`AGENTS.md`'s "Agent Files" list now points at `tasks.md` at the root, next to `history.md`.
+
+Stale `.agents/tasks.md` paths in append-only records (this file and `.agents/error-log.md`) were deliberately left as written — they were accurate on the date they were logged, and rewriting them would falsify the record.

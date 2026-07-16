@@ -45,7 +45,7 @@ Auto-deploys on push to `main` via `.github/workflows/deploy.yml` (GitHub Pages)
 3. Write it for the outside reader (see Audience priority).
 
 ## Agent Files
-- `.agents/tasks.md` — task board (TODO / In Progress / Done)
+- `tasks.md` (repo root) — task board (TODO / In Progress / Done). One `tasks.md` per repo, always at the root — there is no `.agents/tasks.md`.
 - `history.md` (repo root) — dated record of decisions and context (grep, never read in full)
 - `.agents/error-log.md` — mistakes and prevention rules
 
