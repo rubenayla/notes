@@ -153,6 +153,7 @@ Preferred-number series, the base-12 analogues of the decimal 1-2-5 series:
 - [basekit](https://github.com/rubenayla/basekit) — the full project: conversion code, complete notation, and far more examples than fit here.
 - [The Argument for Dozenalism (hexnet.org)](https://hexnet.org/content/argument-dozenalism) · [Dozenal Society of Great Britain](http://www.dozenalsociety.org.uk/) · [Wikipedia: Duodecimal](https://en.wikipedia.org/wiki/Duodecimal)
 - Video: [Numberphile on base 12](https://youtu.be/U6xJfP7-HCc) · [Base 10 vs base 12](https://youtu.be/HVk_viJEDII)
+- [Dozenal graph paper](dozenal_paper.pdf) — printable A4 grid, one page: fine gray gridlines with a bold line every 12 squares in both directions, for laying out dozenal (base-12) calculations by hand.
 
 ## Related
 
