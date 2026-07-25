@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>render_dev — DiagramRender standalone check</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 32px;
+    background: #eef0f4;
+    font-family: system-ui, -apple-system, sans-serif;
+    color: #111318;
+  }
+  h1 { font-size: 18px; margin: 0 0 4px; }
+  p.sub { margin: 0 0 28px; color: #555; font-size: 14px; }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+  }
+  figure {
+    margin: 0;
+    width: 300px;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  }
+  figure figcaption {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  figure figcaption span {
+    display: block;
+    font-weight: 400;
+    color: #666;
+    font-size: 12px;
+    margin-top: 2px;
+  }
+  svg {
+    display: block;
+    width: 300px;
+    height: 420px;
+    background: #f5f6f8;
+    border-radius: 10px;
+  }
+</style>
+</head>
+<body>
+
+<h1>DiagramRender standalone check</h1>
+<p class="sub">Two hardcoded layoutResult fixtures drawn with DiagramRender.draw — no fixture.js / layout.js / sim.js involved.</p>
+
+<div class="row">
+  <figure>
+    <figcaption>Dense 3-turn cluster
+      <span>All three legs under the 500 m floor or just above it — this is the case F14 grades.</span>
+    </figcaption>
+    <svg id="diagram-dense"></svg>
+  </figure>
+
+  <figure>
+    <figcaption>Long leg + two more (F7 rescale)
+      <span>First leg near the 50 km ceiling; the tall bbox exceeds the 300&times;420 canonical widget, so the whole diagram shrinks to fit.</span>
+    </figcaption>
+    <svg id="diagram-long"></svg>
+  </figure>
+</div>
+
+<script src="render.js"></script>
+<script>
+  // Fixture 1: dense 3-turn cluster. Two legs below the d0=500m floor
+  // (clamped to Lmin) and one just above it. Coordinates hand-computed
+  // from heading + drawnLen (heading starts at 0 = straight up = -Y,
+  // clockwise-positive, quantized to 45 deg steps) — this is what
+  // layout.js's layout() would produce, reproduced here by hand so this
+  // page has no dependency on it.
+  var denseCluster = {
+    segments: [
+      {
+        x1: 0, y1: 0, x2: 0, y2: -40,
+        realDist: 80, drawnLen: 40,
+        turn: { type: 'turn', modifier: 'right', angleDeg: 90 },
+        label: 'Calle Mayor'
+      },
+      {
+        x1: 0, y1: -40, x2: 40, y2: -40,
+        realDist: 250, drawnLen: 40,
+        turn: { type: 'turn', modifier: 'left', angleDeg: 45 },
+        label: 'Plaza del Sol'
+      },
+      {
+        x1: 40, y1: -40, x2: 75.4, y2: -75.4,
+        realDist: 650, drawnLen: 50,
+        turn: null,
+        label: 'Calle de Alcalá'
+      }
+    ],
+    bbox: { minX: 0, minY: -75.4, maxX: 75.4, maxY: 0 }
+  };
+
+  // Fixture 2: long leg near the ceiling (d1=50km -> Lmax=220), then two
+  // shorter legs. Tall enough that its bbox (+padding) exceeds the
+  // 300x420 canonical viewport used below, exercising F7.
+  var longLeg = {
+    segments: [
+      {
+        x1: 0, y1: 0, x2: 0, y2: -220,
+        realDist: 50000, drawnLen: 220,
+        turn: { type: 'turn', modifier: 'slight right', angleDeg: 45 },
+        label: 'Autovía del Norte'
+      },
+      {
+        x1: 0, y1: -220, x2: 91.9, y2: -311.9,
+        realDist: 5000, drawnLen: 130,
+        turn: { type: 'turn', modifier: 'left', angleDeg: 90 },
+        label: 'Carretera de Burgos'
+      },
+      {
+        x1: 91.9, y1: -311.9, x2: -49.5, y2: -453.3,
+        realDist: 30000, drawnLen: 200,
+        turn: null,
+        label: 'Avenida Montecillo'
+      }
+    ],
+    bbox: { minX: -49.5, minY: -453.3, maxX: 91.9, maxY: 0 }
+  };
+
+  DiagramRender.draw(document.getElementById('diagram-dense'), denseCluster);
+  DiagramRender.draw(document.getElementById('diagram-long'), longLeg);
+</script>
+</body>
+</html>

@@ -10,6 +10,10 @@ This is the personal-reference companion to my portfolio. For projects, writing,
 
 Units, dates, electrical notation and connectors, screw types, file formats, CAD preferences, hotkeys, programming style. Some I wish were universal (they're just better); others are personal preference. Includes an *Anti-Standards* section for the defaults I deliberately avoid and what I use instead.
 
+### [Prototypes](prototypes.md)
+
+Working browser demos of ideas in progress. Currently: the collapsed maps diagram — a navigation overlay showing the next few maneuvers with log-compressed distances and real angles.
+
 ## Projects
 
 ### [Home design ↗](https://rubenayla.github.io/home-design/)

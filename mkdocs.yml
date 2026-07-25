@@ -3,6 +3,13 @@ site_description: Public notes of Rubén Jiménez Mejías — opinionated standa
 site_author: Rubén Jiménez Mejías
 site_url: https://notes.rubenayla.xyz/
 
+# Prototype directories ship runnable HTML/JS; their dev files (tests, dev
+# harnesses, screenshot tooling) stay in the repo but out of the built site.
+exclude_docs: |
+  prototypes/**/*.test.mjs
+  prototypes/**/screenshot.mjs
+  prototypes/**/render_dev.html
+
 theme:
   name: material
   features:
@@ -33,6 +40,7 @@ nav:
     - Power delivery & DC connector: ideas/power-delivery-dc-connector.md
     - Dozenal (base 12): ideas/dozenal.md
     - Fundamental distance unit: ideas/fundamental-distance-unit.md
+  - Prototypes: prototypes.md
   - Home design ↗: https://rubenayla.github.io/home-design/
   - Portfolio ↗: https://rubenayla.xyz/
 

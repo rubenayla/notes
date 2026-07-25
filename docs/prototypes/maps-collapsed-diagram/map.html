@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Collapsed maps diagram — map view</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #eef0f4;
+    font-family: system-ui, -apple-system, sans-serif;
+    color: #111318;
+  }
+  body {
+    display: flex;
+    justify-content: center;
+    padding: 24px 12px 40px;
+  }
+  .page {
+    width: 960px;
+    max-width: 100%;
+  }
+  h1 {
+    font-size: 17px;
+    margin: 0 0 2px;
+  }
+  p.sub {
+    margin: 0 0 16px;
+    color: #555;
+    font-size: 13px;
+  }
+  .panels {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+    align-items: stretch;
+  }
+  .map-card, .diagram-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    min-width: 0;
+  }
+  .map-card {
+    flex: 3;
+  }
+  .diagram-card {
+    flex: 2;
+    padding: 16px;
+  }
+  #map {
+    width: 100%;
+    height: 460px;
+    border-radius: 10px;
+    background: #dde1e7;
+  }
+  svg#diagram {
+    display: block;
+    width: 100%;
+    height: 460px;
+    background: #f5f6f8;
+    border-radius: 10px;
+  }
+  @media (max-width: 700px) {
+    .panels {
+      flex-direction: column;
+    }
+  }
+  .controls {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 16px 18px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  }
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .row:last-child { margin-bottom: 0; }
+  .row label {
+    font-size: 13px;
+    font-weight: 600;
+    min-width: 88px;
+  }
+  input[type="range"] {
+    flex: 1;
+    min-width: 120px;
+  }
+  .readout {
+    font-variant-numeric: tabular-nums;
+    font-size: 13px;
+    color: #333;
+    min-width: 150px;
+    text-align: right;
+  }
+  button#play-pause {
+    font: inherit;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 7px 16px;
+    border-radius: 8px;
+    border: none;
+    background: #1a56db;
+    color: #fff;
+    cursor: pointer;
+  }
+  button#play-pause:active {
+    background: #123f9e;
+  }
+  select#speed {
+    font: inherit;
+    font-size: 13px;
+    padding: 5px 8px;
+    border-radius: 6px;
+    border: 1px solid #c9ccd4;
+    background: #fff;
+  }
+  .switch-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+  }
+  .switch-row input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+  }
+  .meta {
+    font-size: 12px;
+    color: #666;
+    margin-top: 10px;
+    line-height: 1.5;
+  }
+  .meta code {
+    background: #f0f1f4;
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 11px;
+  }
+  .leaflet-marker-car {
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.35));
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <h1>Collapsed maps diagram — map view</h1>
+  <p class="sub">Real map alongside the collapsed diagram, playing the route in real time.</p>
+
+  <div class="panels">
+    <div class="map-card">
+      <div id="map"></div>
+    </div>
+    <div class="diagram-card">
+      <svg id="diagram" role="img" aria-label="Route diagram"></svg>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="row">
+      <label for="progress">Progress</label>
+      <input type="range" id="progress" min="0" max="1" step="any" value="0">
+      <span class="readout" id="readout">0 m / 0 m</span>
+    </div>
+    <div class="row">
+      <button id="play-pause" type="button">&#9654; Play</button>
+      <label for="speed" style="min-width:auto;">Speed</label>
+      <select id="speed">
+        <option value="1">1&times;</option>
+        <option value="10">10&times;</option>
+        <option value="60">60&times;</option>
+      </select>
+      <span class="switch-row">
+        <input type="checkbox" id="follow" checked>
+        <label for="follow" style="min-width:auto; font-weight:400;">Follow marker</label>
+      </span>
+      <span class="switch-row">
+        <input type="checkbox" id="north-up" checked>
+        <label for="north-up" style="min-width:auto; font-weight:400;">North up</label>
+      </span>
+      <span class="switch-row">
+        <input type="checkbox" id="spline-legs" checked>
+        <label for="spline-legs" style="min-width:auto; font-weight:400;">Spline legs</label>
+      </span>
+    </div>
+    <div class="meta" id="meta"></div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="fixture.js"></script>
+<script src="layout.js"></script>
+<script src="render.js"></script>
+<!-- sim.js not used here: this page manages progress state itself (single source of truth below) -->
+<script>
+(function () {
+  'use strict';
+
+  var EPS = 1e-6;
+
+  var route = globalThis.ROUTE;
+  var svg = document.getElementById('diagram');
+  var slider = document.getElementById('progress');
+  var readout = document.getElementById('readout');
+  var meta = document.getElementById('meta');
+  var playPauseBtn = document.getElementById('play-pause');
+  var speedSelect = document.getElementById('speed');
+  var followCheckbox = document.getElementById('follow');
+  var northCheckbox = document.getElementById('north-up');
+
+  var splineCheckbox = document.getElementById('spline-legs');
+
+  var params = new URLSearchParams(location.search);
+  // ?north=0 selects heading-up orientation (north-up is the default);
+  // ?shape=straight selects straight legs (splines are the default).
+  if (params.get('north') === '0') northCheckbox.checked = false;
+  if (params.get('shape') === 'straight') splineCheckbox.checked = false;
+  northCheckbox.addEventListener('change', function () {
+    setProgress(progressMeters, 'init');
+  });
+  splineCheckbox.addEventListener('change', function () {
+    setProgress(progressMeters, 'init');
+  });
+
+  function clamp(x, lo, hi) { return Math.min(Math.max(x, lo), hi); }
+
+  function formatMeters(m) {
+    if (!isFinite(m)) return '0 m';
+    if (m >= 1000) return (m / 1000).toFixed(1) + ' km';
+    return Math.round(m) + ' m';
+  }
+
+  function formatClock(s) {
+    s = Math.max(0, Math.round(s));
+    var mm = Math.floor(s / 60);
+    var ss = s % 60;
+    return mm + ':' + (ss < 10 ? '0' : '') + ss;
+  }
+
+  // --- time <-> distance mapping (M3) --------------------------------
+  // steps[i].distance / steps[i].duration are, by fixture.js's convention,
+  // the leg BEFORE maneuver i. Cumulative sums give, for each maneuver
+  // index, the total distance/time elapsed once that maneuver is reached.
+  // Converting between elapsed seconds and progress meters piecewise
+  // through these per-leg cumulative values (rather than a single
+  // route-wide average speed) makes the highway leg fast and the city
+  // legs slow, matching real driving.
+  var cumDist = [];
+  var cumDur = [];
+  (function buildCumulative() {
+    var acc_d = 0, acc_t = 0;
+    for (var i = 0; i < route.steps.length; i++) {
+      acc_d += route.steps[i].distance;
+      acc_t += route.steps[i].duration;
+      cumDist.push(acc_d);
+      cumDur.push(acc_t);
+    }
+  })();
+
+  function timeToMeters(t) {
+    var n = cumDur.length;
+    if (n === 0) return 0;
+    t = clamp(t, 0, route.totalDuration);
+    var j = 0;
+    while (j < n && cumDur[j] < t - EPS) j++;
+    if (j >= n) j = n - 1;
+    var prevDur = j > 0 ? cumDur[j - 1] : 0;
+    var prevDist = j > 0 ? cumDist[j - 1] : 0;
+    var segDur = cumDur[j] - prevDur;
+    var segDist = cumDist[j] - prevDist;
+    var f = segDur > EPS ? (t - prevDur) / segDur : 0;
+    return prevDist + f * segDist;
+  }
+
+  function metersToSeconds(pm) {
+    var n = cumDist.length;
+    if (n === 0) return 0;
+    pm = clamp(pm, 0, route.totalDistance);
+    var j = 0;
+    while (j < n && cumDist[j] < pm - EPS) j++;
+    if (j >= n) j = n - 1;
+    var prevDist = j > 0 ? cumDist[j - 1] : 0;
+    var prevDur = j > 0 ? cumDur[j - 1] : 0;
+    var segDist = cumDist[j] - prevDist;
+    var segDur = cumDur[j] - prevDur;
+    var f = segDist > EPS ? (pm - prevDist) / segDist : 0;
+    return prevDur + f * segDur;
+  }
+
+  // --- marker position along ROUTE.geometry (M2) ----------------------
+  // Interpolates by progressMeters using cumulative segment lengths
+  // along the geometry, normalized to totalDistance, rather than
+  // reprojecting OSRM's own leg distances.
+  function haversine(a, b) {
+    var R = 6371000;
+    var lat1 = (a[1] * Math.PI) / 180, lat2 = (b[1] * Math.PI) / 180;
+    var dLat = ((b[1] - a[1]) * Math.PI) / 180;
+    var dLon = ((b[0] - a[0]) * Math.PI) / 180;
+    var h = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    return 2 * R * Math.asin(Math.sqrt(clamp(h, 0, 1)));
+  }
+
+  var geomCum = [0];
+  (function buildGeomCumulative() {
+    var geom = route.geometry;
+    for (var i = 1; i < geom.length; i++) {
+      geomCum.push(geomCum[i - 1] + haversine(geom[i - 1], geom[i]));
+    }
+  })();
+  var geomTotal = geomCum[geomCum.length - 1] || 1;
+  var geomScale = route.totalDistance / geomTotal;
+  var normGeomCum = geomCum.map(function (v) { return v * geomScale; });
+
+  function positionAtProgress(progressMeters) {
+    var geom = route.geometry;
+    var pm = clamp(progressMeters, 0, route.totalDistance);
+    var n = normGeomCum.length;
+    var i = 0;
+    while (i < n - 1 && normGeomCum[i + 1] < pm - EPS) i++;
+    if (i >= n - 1) i = n - 2;
+    if (i < 0) i = 0;
+    var segLen = normGeomCum[i + 1] - normGeomCum[i];
+    var f = segLen > EPS ? (pm - normGeomCum[i]) / segLen : 0;
+    f = clamp(f, 0, 1);
+    var p0 = geom[i], p1 = geom[i + 1];
+    var lon = p0[0] + f * (p1[0] - p0[0]);
+    var lat = p0[1] + f * (p1[1] - p0[1]);
+    return [lat, lon];
+  }
+
+  // --- map setup (M1) --------------------------------------------------
+  var map = L.map('map', { zoomControl: true });
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  var routeLatLngs = route.geometry.map(function (p) { return [p[1], p[0]]; });
+  var routeLine = L.polyline(routeLatLngs, { color: '#1a56db', weight: 5, opacity: 0.55 }).addTo(map);
+  map.fitBounds(routeLine.getBounds(), { padding: [24, 24] });
+
+  var carIcon = L.divIcon({
+    className: 'leaflet-marker-car',
+    html: '<div style="width:18px;height:18px;border-radius:50%;background:#1a56db;' +
+      'border:3px solid #ffffff;box-shadow:0 0 0 1px #1a56db;"></div>',
+    iconSize: [18, 18],
+    iconAnchor: [9, 9]
+  });
+  var carMarker = L.marker(routeLatLngs[0], { icon: carIcon, zIndexOffset: 1000 }).addTo(map);
+
+  var maneuverLayer = L.layerGroup().addTo(map);
+
+  // Marks exactly the maneuvers the diagram is drawing (adaptive count),
+  // read from the layout result so map and diagram can never disagree (M5).
+  function updateManeuverMarkers(layoutResult) {
+    maneuverLayer.clearLayers();
+    layoutResult.shownLegs.forEach(function (leg) {
+      var loc = leg.step.location;
+      L.circleMarker([loc[1], loc[0]], {
+        radius: 7,
+        color: '#ffffff',
+        weight: 2,
+        fillColor: '#e8590c',
+        fillOpacity: 0.95
+      }).bindTooltip(leg.step.name || leg.step.type, { direction: 'top', offset: [0, -6] })
+        .addTo(maneuverLayer);
+    });
+  }
+
+  // --- shared render/update path (M7: every progress change flows
+  // through here, whether triggered by a slider drag or by playback) ---
+  function render(progressMeters) {
+    var opts = {
+      orientation: northCheckbox.checked ? 'north' : 'heading',
+      legShape: splineCheckbox.checked ? 'spline' : 'straight'
+    };
+    var layoutResult = DiagramLayout.layout(route.steps, progressMeters, opts);
+    DiagramRender.draw(svg, layoutResult);
+
+    var latlng = positionAtProgress(progressMeters);
+    carMarker.setLatLng(latlng);
+    if (followCheckbox.checked) {
+      map.setView(latlng, map.getZoom(), { animate: false });
+    }
+
+    updateManeuverMarkers(layoutResult);
+
+    readout.textContent = formatMeters(progressMeters) + ' / ' + formatMeters(route.totalDistance) +
+      '  ·  ' + formatClock(elapsedSimSeconds) + ' / ' + formatClock(route.totalDuration);
+
+    meta.innerHTML = route.name + ' &middot; ' + route.steps.length + ' maneuvers total &middot; ' +
+      'window starts at step ' + layoutResult.currentIndex + ' &middot; showing ' +
+      layoutResult.shownLegs.length + ' &middot; ' + speedSelect.value + '&times; speed';
+  }
+
+  // --- single source of truth ------------------------------------------
+  // progressMeters is the one piece of state. Every input (slider drag,
+  // playback tick, ?t= on load) goes through setProgress; the slider, the
+  // clock readout, the map and the diagram are all views derived from it.
+  // Playback never reads position back out of a UI widget.
+  var progressMeters = 0;
+  var elapsedSimSeconds = 0;
+
+  function setProgress(pm, source) { // source: 'slider' | 'clock' | 'init'
+    progressMeters = clamp(pm, 0, route.totalDistance);
+    if (source !== 'clock') elapsedSimSeconds = metersToSeconds(progressMeters);
+    if (source !== 'slider') slider.value = String(progressMeters / route.totalDistance);
+    render(progressMeters);
+  }
+
+  slider.addEventListener('input', function () {
+    var t = clamp(parseFloat(slider.value) || 0, 0, 1);
+    setProgress(t * route.totalDistance, 'slider');
+  });
+
+  // ?t= sets the initial position (F12/M6); default 0.
+  var initialT = parseFloat(params.get('t'));
+  setProgress((Number.isNaN(initialT) ? 0 : clamp(initialT, 0, 1)) * route.totalDistance, 'init');
+
+  // --- playback (M3, M4, M6) -------------------------------------------
+  var playing = false;
+  var lastFrameTime = null;
+
+  function tick(now) {
+    if (!playing) return;
+    if (lastFrameTime === null) lastFrameTime = now;
+    // dt is real elapsed time since the last frame, not a frame count, so
+    // playback speed stays correct even if rAF is throttled (headless
+    // Chromium) or a frame took a while to paint. No upper clamp: a
+    // large dt (e.g. after a slow tile load) is real time that has to
+    // count, or high speed multipliers would run slow.
+    var dt = (now - lastFrameTime) / 1000;
+    lastFrameTime = now;
+
+    var speed = parseFloat(speedSelect.value) || 1;
+    elapsedSimSeconds = clamp(elapsedSimSeconds + dt * speed, 0, route.totalDuration);
+    setProgress(timeToMeters(elapsedSimSeconds), 'clock');
+
+    if (elapsedSimSeconds >= route.totalDuration - EPS) {
+      pause();
+      return;
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function play() {
+    if (playing) return;
+    if (elapsedSimSeconds >= route.totalDuration - EPS) elapsedSimSeconds = 0; // restart from the end
+    playing = true;
+    lastFrameTime = null;
+    playPauseBtn.innerHTML = '&#10074;&#10074; Pause';
+    requestAnimationFrame(tick);
+  }
+
+  function pause() {
+    playing = false;
+    playPauseBtn.innerHTML = '&#9654; Play';
+  }
+
+  playPauseBtn.addEventListener('click', function () {
+    if (playing) pause(); else play();
+  });
+
+  // ?speed=10 sets the initial speed selection (also honored by ?play=1).
+  var initialSpeed = params.get('speed');
+  if (initialSpeed === '1' || initialSpeed === '10' || initialSpeed === '60') {
+    speedSelect.value = initialSpeed;
+  }
+
+  // ?play=1&speed=60 starts playback on load (M6).
+  if (params.get('play') === '1') {
+    play();
+  }
+})();
+</script>
+</body>
+</html>

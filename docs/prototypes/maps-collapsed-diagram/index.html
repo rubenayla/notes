@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Collapsed maps diagram — prototype</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #eef0f4;
+    font-family: system-ui, -apple-system, sans-serif;
+    color: #111318;
+  }
+  body {
+    display: flex;
+    justify-content: center;
+    padding: 24px 12px 40px;
+  }
+  .widget {
+    width: 480px;
+    max-width: 100%;
+  }
+  h1 {
+    font-size: 17px;
+    margin: 0 0 2px;
+  }
+  p.sub {
+    margin: 0 0 16px;
+    color: #555;
+    font-size: 13px;
+  }
+  .diagram-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    margin-bottom: 16px;
+  }
+  svg#diagram {
+    display: block;
+    width: 100%;
+    height: 480px;
+    background: #f5f6f8;
+    border-radius: 10px;
+  }
+  .controls {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 16px 18px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  }
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .row:last-child { margin-bottom: 0; }
+  .row label {
+    font-size: 13px;
+    font-weight: 600;
+    min-width: 88px;
+  }
+  input[type="range"] {
+    flex: 1;
+  }
+  .readout {
+    font-variant-numeric: tabular-nums;
+    font-size: 13px;
+    color: #333;
+    min-width: 108px;
+    text-align: right;
+  }
+  .switch-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+  }
+  .switch-row input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+  }
+  .meta {
+    font-size: 12px;
+    color: #666;
+    margin-top: 10px;
+    line-height: 1.5;
+  }
+  .meta code {
+    background: #f0f1f4;
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 11px;
+  }
+</style>
+</head>
+<body>
+
+<div class="widget">
+  <h1>Collapsed maps diagram</h1>
+  <p class="sub">Upcoming maneuvers (as many as fit the frame), compressed distances, real-time progress slider.</p>
+
+  <div class="diagram-card">
+    <svg id="diagram" role="img" aria-label="Route diagram"></svg>
+  </div>
+
+  <div class="controls">
+    <div class="row">
+      <label for="progress">Progress</label>
+      <input type="range" id="progress" min="0" max="1" step="any" value="0">
+      <span class="readout" id="readout">0 m / 0 m</span>
+    </div>
+    <div class="row">
+      <span class="switch-row">
+        <input type="checkbox" id="north-up" checked>
+        <label for="north-up" style="min-width:auto; font-weight:400;">North up (off = heading up)</label>
+      </span>
+      <span class="switch-row">
+        <input type="checkbox" id="spline-legs" checked>
+        <label for="spline-legs" style="min-width:auto; font-weight:400;">Spline legs (off = straight)</label>
+      </span>
+    </div>
+    <div class="meta" id="meta"></div>
+  </div>
+</div>
+
+<script src="fixture.js"></script>
+<script src="layout.js"></script>
+<script src="render.js"></script>
+<script src="sim.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var svg = document.getElementById('diagram');
+  var slider = document.getElementById('progress');
+  var readout = document.getElementById('readout');
+  var northCheckbox = document.getElementById('north-up');
+  var splineCheckbox = document.getElementById('spline-legs');
+  var meta = document.getElementById('meta');
+
+  var route = globalThis.ROUTE;
+
+  // ?north=0 selects heading-up orientation (north-up is the default).
+  var params = new URLSearchParams(location.search);
+  if (params.get('north') === '0') northCheckbox.checked = false;
+  if (params.get('shape') === 'straight') splineCheckbox.checked = false;
+
+  function formatMeters(m) {
+    if (!isFinite(m)) return '0 m';
+    if (m >= 1000) return (m / 1000).toFixed(1) + ' km';
+    return Math.round(m) + ' m';
+  }
+
+  function render(progressMeters) {
+    var opts = {
+      orientation: northCheckbox.checked ? 'north' : 'heading',
+      legShape: splineCheckbox.checked ? 'spline' : 'straight'
+    };
+    var layoutResult = DiagramLayout.layout(route.steps, progressMeters, opts);
+    DiagramRender.draw(svg, layoutResult);
+
+    readout.textContent = formatMeters(progressMeters) + ' / ' + formatMeters(route.totalDistance);
+
+    meta.innerHTML = route.name + ' &middot; ' + route.steps.length + ' maneuvers total &middot; ' +
+      'window starts at step ' + layoutResult.currentIndex + ' &middot; showing ' +
+      layoutResult.shownLegs.length;
+  }
+
+  var currentProgress = 0;
+
+  var sim = DiagramSim.init({
+    route: route,
+    slider: slider,
+    onProgress: function (progressMeters) {
+      currentProgress = progressMeters;
+      render(progressMeters);
+    }
+  });
+
+  northCheckbox.addEventListener('change', function () {
+    render(currentProgress);
+  });
+  splineCheckbox.addEventListener('change', function () {
+    render(currentProgress);
+  });
+})();
+</script>
+</body>
+</html>
