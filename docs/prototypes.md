@@ -16,12 +16,16 @@ Typical navigation apps show one upcoming maneuver at a time; this shows the sha
 
 The route is a fixed test route (Madrid centro → Monte de Viñuelas, 29.6 km), fetched from OSRM (Open Source Routing Machine, a free routing engine); progress is simulated with a slider or clock, not GPS. Prior art for the length distortion: [LineDrive](http://graphics.stanford.edu/papers/routemaps/) (Agrawala & Stolte, SIGGRAPH 2001), which showed that non-uniform route scaling reads well — the sliding real-time window over upcoming maneuvers is the part that's new here.
 
-## [Car pie menu](https://rubenayla.github.io/applets/car-pie-menu.html)
+## [Car pie menu](prototypes/car-pie-menu/index.html)
 
-[![The demo mid-gesture: the climate pie menu open around the finger, one option highlighted](assets/prototypes/car-pie-menu.png)](https://rubenayla.github.io/applets/car-pie-menu.html)
+[![The demo mid-gesture: the climate pie menu open around the finger, one option highlighted](assets/prototypes/car-pie-menu.png)](prototypes/car-pie-menu/index.html)
 
 *Click the image or the title to open the live demo — best on a tablet in landscape, added to the home screen for fullscreen.*
 
 Car touchscreens are uncomfortable while driving because small buttons need visual feedback, and your eyes are already busy. This prototype replaces them with pie menus, the interaction Blender users know: touch anywhere in a broad region (climate, drive, media, vehicle) and the options appear in a circle *around your finger* — you select by dragging in a direction and releasing, no precision needed and no need to look at where you first touched. Options are always visible, so there's nothing to memorize up front, but once you know the directions you can operate entirely by muscle memory.
 
-Visual variants of the same idea: [columns](https://rubenayla.github.io/applets/car-pie-menu-columns.html), [glass](https://rubenayla.github.io/applets/car-pie-menu-glass.html), [HUD](https://rubenayla.github.io/applets/car-pie-menu-hud.html). Source lives in [rubenayla/applets](https://github.com/rubenayla/applets).
+Visual variants of the same idea: [columns](prototypes/car-pie-menu/columns.html), [glass](prototypes/car-pie-menu/glass.html), [HUD](prototypes/car-pie-menu/hud.html).
+
+## Small utilities
+
+- [Solar pump calculator](prototypes/solar-pump/index.html) — an old quick calculator (Spanish UI): electricity cost of running a pump over the years vs. the cost of the solar panels to power it instead.

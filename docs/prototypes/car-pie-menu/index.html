@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Car Pie Menu — Merge</title>
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Car%20Pie%20Menu%22%2C%22short_name%22%3A%22CarPie%22%2C%22display%22%3A%22fullscreen%22%2C%22orientation%22%3A%22landscape%22%2C%22background_color%22%3A%22%23f0f0f5%22%2C%22theme_color%22%3A%22%23f0f0f5%22%7D">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f0f5;
+  --text:#1a1a2e;
+  --text-secondary:#444;
+  --surface:rgba(0,0,0,0.03);
+  --grid-border:rgba(0,0,0,0.08);
+  --toast-bg:rgba(0,0,0,0.7);
+  --climate:#1a8fc4;
+  --drive:#c47a10;
+  --media:#8e44ad;
+  --vehicle:#607d8b;
+}
+html,body{
+  width:100%;height:100%;overflow:hidden;
+  background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',Roboto,sans-serif;
+  touch-action:none;user-select:none;-webkit-user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+#fullscreen-overlay{
+  position:fixed;inset:0;z-index:1000;
+  background:rgba(240,240,245,0.95);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  cursor:pointer;gap:8px;
+}
+#fullscreen-overlay h1{font-size:2.2em;margin-bottom:0.1em;font-weight:200;letter-spacing:0.12em;color:var(--text)}
+#fullscreen-overlay p{font-size:1em;opacity:0.4;font-weight:300;color:var(--text)}
+#fullscreen-overlay.hidden{display:none}
+
+#landscape-warning{
+  position:fixed;inset:0;z-index:999;
+  background:var(--bg);
+  display:none;align-items:center;justify-content:center;
+  flex-direction:column;gap:1em;
+}
+#landscape-warning svg{width:60px;height:60px;fill:var(--text);opacity:0.4}
+#landscape-warning p{opacity:0.5;font-size:1.1em;color:var(--text)}
+@media(orientation:portrait){
+  #landscape-warning{display:flex}
+  #app{display:none!important}
+}
+
+/* Status bar */
+#status-bar{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  height:28px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;
+  background:rgba(240,240,245,0.9);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(0,0,0,0.06);
+  font-size:0.72em;font-weight:400;letter-spacing:0.04em;
+  color:rgba(0,0,0,0.45);
+}
+#status-bar .status-left,
+#status-bar .status-right{
+  display:flex;align-items:center;gap:14px;
+}
+#status-bar .status-center{
+  position:absolute;left:50%;transform:translateX(-50%);
+  font-weight:500;color:rgba(0,0,0,0.6);
+}
+.status-dot{
+  width:5px;height:5px;border-radius:50%;
+  background:#4caf50;display:inline-block;
+}
+.battery-icon{
+  display:inline-flex;align-items:center;gap:3px;
+}
+.battery-bar{
+  width:18px;height:9px;border:1px solid rgba(0,0,0,0.3);
+  border-radius:2px;position:relative;
+  padding:1px;
+}
+.battery-bar::after{
+  content:'';display:block;
+  width:70%;height:100%;
+  background:rgba(0,0,0,0.35);
+  border-radius:1px;
+}
+.battery-bar::before{
+  content:'';position:absolute;
+  right:-3px;top:50%;transform:translateY(-50%);
+  width:2px;height:4px;
+  background:rgba(0,0,0,0.25);
+  border-radius:0 1px 1px 0;
+}
+
+#app{
+  width:100%;height:100%;
+  display:flex;flex-direction:column;
+}
+
+/* 4 tall columns — from Columns layout, below status bar */
+#grid{
+  flex:1;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr 1fr;
+  grid-template-rows:1fr;
+  gap:0;
+  margin-top:28px;
+}
+.region{
+  position:relative;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;overflow:hidden;
+  cursor:pointer;
+  transition:background 0.25s;
+}
+.region:active{background:rgba(0,0,0,0.04)!important}
+
+/* Vertical separators */
+.region + .region{
+  border-left:1px solid rgba(0,0,0,0.06);
+}
+
+/* Subtle gradient tinting */
+.region[data-region="climate"]{
+  background:linear-gradient(to bottom,
+    color-mix(in srgb, var(--climate) 8%, var(--bg)) 0%,
+    color-mix(in srgb, var(--climate) 3%, var(--bg)) 50%,
+    var(--bg) 100%);
+}
+.region[data-region="drive"]{
+  background:linear-gradient(to bottom,
+    color-mix(in srgb, var(--drive) 8%, var(--bg)) 0%,
+    color-mix(in srgb, var(--drive) 3%, var(--bg)) 50%,
+    var(--bg) 100%);
+}
+.region[data-region="media"]{
+  background:linear-gradient(to bottom,
+    color-mix(in srgb, var(--media) 8%, var(--bg)) 0%,
+    color-mix(in srgb, var(--media) 3%, var(--bg)) 50%,
+    var(--bg) 100%);
+}
+.region[data-region="vehicle"]{
+  background:linear-gradient(to bottom,
+    color-mix(in srgb, var(--vehicle) 6%, var(--bg)) 0%,
+    color-mix(in srgb, var(--vehicle) 2%, var(--bg)) 50%,
+    var(--bg) 100%);
+}
+
+.region-icon{
+  font-size:4em;
+  opacity:0.75;
+  pointer-events:none;
+  filter:grayscale(0.1);
+  line-height:1;
+}
+.region-label{
+  font-size:0.92em;
+  font-weight:500;
+  letter-spacing:0.25em;
+  text-transform:uppercase;
+  opacity:0.85;
+  pointer-events:none;
+  color:var(--text);
+}
+.region-state{
+  position:absolute;bottom:12%;left:50%;transform:translateX(-50%);
+  font-size:1.15em;
+  pointer-events:none;
+  min-height:1.1em;
+  font-weight:400;
+  letter-spacing:0.03em;
+  color:var(--text-secondary);
+  text-align:center;white-space:nowrap;
+  max-width:90%;overflow:hidden;text-overflow:ellipsis;
+}
+
+/* Pie menu */
+#pie-overlay{
+  position:fixed;inset:0;z-index:100;display:none;
+  background:rgba(240,240,245,0.6);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+}
+#pie-overlay.active{display:block}
+#pie-svg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
+
+/* Toast */
+#toast{
+  position:fixed;bottom:40px;left:50%;transform:translateX(-50%);
+  background:var(--toast-bg);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(0,0,0,0.1);
+  color:#fff;padding:10px 28px;border-radius:24px;
+  font-size:0.85em;font-weight:400;letter-spacing:0.04em;
+  opacity:0;transition:opacity 0.25s;
+  z-index:200;pointer-events:none;white-space:nowrap;
+}
+#toast.show{opacity:1}
+
+/* Pie enter animation */
+@keyframes pie-in{
+  from{transform:scale(0.5);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+</style>
+</head>
+<body>
+
+<div id="fullscreen-overlay">
+  <h1>Car Pie Menu</h1>
+  <p>Tap to enter fullscreen</p>
+</div>
+
+<div id="landscape-warning">
+  <svg viewBox="0 0 24 24"><path d="M16.48 2.52c3.27 1.55 5.61 4.72 5.97 8.48h1.5C23.44 4.84 18.29 0 12 0l-.66.03 3.81 3.81 1.33-1.32zm-6.25-.77c-.59-.59-1.54-.59-2.12 0L1.75 8.11c-.59.59-.59 1.54 0 2.12l12.02 12.02c.59.59 1.54.59 2.12 0l6.36-6.36c.59-.59.59-1.54 0-2.12L10.23 1.75zm4.6 19.44L2.81 9.17l6.36-6.36 12.02 12.02-6.36 6.36zm-7.31.29c-3.27-1.54-5.61-4.72-5.97-8.48h-1.5C.52 19.16 5.71 24 12 24l.66-.03-3.81-3.81-1.33 1.32z"/></svg>
+  <p>Please rotate to landscape</p>
+</div>
+
+<div id="status-bar">
+  <div class="status-left">
+    <span class="status-dot"></span>
+    <span>LTE</span>
+    <span>GPS</span>
+  </div>
+  <div class="status-center" id="status-time">12:00</div>
+  <div class="status-right">
+    <span>21 °C</span>
+    <span>274 km</span>
+    <span class="battery-icon"><span class="battery-bar"></span></span>
+  </div>
+</div>
+
+<div id="app">
+  <div id="grid">
+    <div class="region" data-region="climate">
+      <span class="region-icon">&#10052;</span>
+      <span class="region-label">Climate</span>
+      <span class="region-state" id="state-climate">22 °C · Auto</span>
+    </div>
+    <div class="region" data-region="drive">
+      <span class="region-icon">&#128161;</span>
+      <span class="region-label">Drive</span>
+      <span class="region-state" id="state-drive">Lights: Auto · Locked</span>
+    </div>
+    <div class="region" data-region="media">
+      <span class="region-icon">&#9835;</span>
+      <span class="region-label">Media</span>
+      <span class="region-state" id="state-media">Vol: 40% · ▶ · Bluetooth</span>
+    </div>
+    <div class="region" data-region="vehicle">
+      <span class="region-icon">&#9881;</span>
+      <span class="region-label">Vehicle</span>
+      <span class="region-state" id="state-vehicle">Seat heat: Off</span>
+    </div>
+  </div>
+</div>
+
+<div id="pie-overlay">
+  <svg id="pie-svg"></svg>
+</div>
+
+<div id="toast"></div>
+
+<script>
+'use strict';
+
+// ── Status bar clock ──────────────────────────────────
+function updateClock() {
+  const now = new Date();
+  const h = now.getHours().toString().padStart(2, '0');
+  const m = now.getMinutes().toString().padStart(2, '0');
+  document.getElementById('status-time').textContent = `${h}:${m}`;
+}
+updateClock();
+setInterval(updateClock, 10000);
+
+// ── State ──────────────────────────────────────────────
+const state = {
+  climate: { temp: 22, fan: 3, ac: true, auto: true, defrostF: false, defrostR: false },
+  drive: { lights: 'auto', highBeam: false, hazards: false, wipers: false, locked: true, trunk: false },
+  media: { vol: 40, playing: true, source: 'Bluetooth', navAudio: true },
+  vehicle: { seatHeat: 0, mirrors: false, camera: false },
+};
+
+// ── Region definitions ─────────────────────────────────
+const regions = {
+  climate: {
+    color: getComputedStyle(document.documentElement).getPropertyValue('--climate').trim(),
+    options: [
+      { label: 'Temp +', icon: '🔺' },
+      { label: 'Fan +', icon: '💨' },
+      { label: 'AC', icon: '❄' },
+      { label: 'Defrost F', icon: '▓' },
+      { label: 'Temp −', icon: '🔻' },
+      { label: 'Fan −', icon: '🌬' },
+      { label: 'Auto', icon: 'Ⓐ' },
+      { label: 'Defrost R', icon: '▒' },
+    ],
+  },
+  drive: {
+    color: getComputedStyle(document.documentElement).getPropertyValue('--drive').trim(),
+    options: [
+      { label: 'Headlights', icon: '💡' },
+      { label: 'High beam', icon: '🔆' },
+      { label: 'Right', icon: '▶' },
+      { label: 'Hazards', icon: '⚠' },
+      { label: 'Wipers', icon: '🌧' },
+      { label: 'Trunk', icon: '📦' },
+      { label: 'Left', icon: '◀' },
+      { label: 'Lock', icon: '🔒' },
+    ],
+  },
+  media: {
+    color: getComputedStyle(document.documentElement).getPropertyValue('--media').trim(),
+    options: [
+      { label: 'Vol +', icon: '🔊' },
+      { label: 'Next', icon: '⏭' },
+      { label: 'Source', icon: '📡' },
+      { label: 'Nav audio', icon: '🔈' },
+      { label: 'Vol −', icon: '🔉' },
+      { label: 'Prev', icon: '⏮' },
+      { label: 'Recenter', icon: '◎' },
+      { label: 'Play/Pause', icon: '⏯' },
+    ],
+  },
+  vehicle: {
+    color: getComputedStyle(document.documentElement).getPropertyValue('--vehicle').trim(),
+    options: [
+      { label: 'Seat heat', icon: '🔥' },
+      { label: 'Camera', icon: '📷' },
+      { label: 'Settings', icon: '⚙' },
+      { label: 'Mirrors', icon: '🪞' },
+    ],
+  },
+};
+
+// ── Constants — reduced radii for narrower columns (from Columns) ──
+const INNER_R = 55;
+const OUTER_R = 160;
+const LABEL_R = 110;
+const DEAD_ZONE = 12;
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+// ── DOM refs ───────────────────────────────────────────
+const overlay = document.getElementById('pie-overlay');
+const svg = document.getElementById('pie-svg');
+const toastEl = document.getElementById('toast');
+const fsOverlay = document.getElementById('fullscreen-overlay');
+
+// ── Pie menu state ─────────────────────────────────────
+let activePie = null;
+let toastTimer = null;
+
+// ── Fullscreen ─────────────────────────────────────────
+fsOverlay.addEventListener('click', () => {
+  const el = document.documentElement;
+  if (el.requestFullscreen) el.requestFullscreen().catch(() => {});
+  else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  fsOverlay.classList.add('hidden');
+});
+
+fsOverlay.addEventListener('touchstart', () => {
+  fsOverlay.classList.add('hidden');
+}, { once: true });
+
+// ── SVG helpers ────────────────────────────────────────
+function polarToCartesian(cx, cy, r, angleDeg) {
+  const a = (angleDeg - 90) * Math.PI / 180;
+  return { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) };
+}
+
+function sectorPath(cx, cy, innerR, outerR, startAngle, endAngle) {
+  const s1 = polarToCartesian(cx, cy, outerR, startAngle);
+  const e1 = polarToCartesian(cx, cy, outerR, endAngle);
+  const s2 = polarToCartesian(cx, cy, innerR, endAngle);
+  const e2 = polarToCartesian(cx, cy, innerR, startAngle);
+  const largeArc = (endAngle - startAngle) > 180 ? 1 : 0;
+  return [
+    `M ${s1.x} ${s1.y}`,
+    `A ${outerR} ${outerR} 0 ${largeArc} 1 ${e1.x} ${e1.y}`,
+    `L ${s2.x} ${s2.y}`,
+    `A ${innerR} ${innerR} 0 ${largeArc} 0 ${e2.x} ${e2.y}`,
+    'Z',
+  ].join(' ');
+}
+
+function createSVGElement(tag, attrs) {
+  const el = document.createElementNS(SVG_NS, tag);
+  for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
+  return el;
+}
+
+// ── Show pie ───────────────────────────────────────────
+function showPie(regionName, cx, cy) {
+  const reg = regions[regionName];
+  if (!reg) return;
+  const opts = reg.options;
+  const n = opts.length;
+  const sliceAngle = 360 / n;
+
+  const offset = reg.offset !== undefined ? reg.offset : -sliceAngle / 2;
+
+  activePie = { region: regionName, cx, cy, options: opts, color: reg.color, highlighted: -1, offset };
+
+  svg.innerHTML = '';
+
+  const g = createSVGElement('g', {
+    style: `transform-origin:${cx}px ${cy}px;animation:pie-in 0.12s ease-out`,
+  });
+
+  for (let i = 0; i < n; i++) {
+    const startA = i * sliceAngle + offset;
+    const endA = startA + sliceAngle;
+    const d = sectorPath(cx, cy, INNER_R, OUTER_R, startA, endA);
+
+    const path = createSVGElement('path', {
+      d,
+      fill: reg.color,
+      'fill-opacity': '0.2',
+      stroke: 'rgba(0,0,0,0.08)',
+      'stroke-width': '0.5',
+      'data-index': i,
+      class: 'pie-sector',
+    });
+    g.appendChild(path);
+
+    const midAngle = startA + sliceAngle / 2;
+    const lp = polarToCartesian(cx, cy, LABEL_R, midAngle);
+
+    const icon = createSVGElement('text', {
+      x: lp.x, y: lp.y - 9,
+      'text-anchor': 'middle',
+      'dominant-baseline': 'central',
+      'font-size': '26',
+      fill: '#1a1a2e',
+      'pointer-events': 'none',
+      opacity: '0.9',
+    });
+    icon.textContent = opts[i].icon;
+    g.appendChild(icon);
+
+    const text = createSVGElement('text', {
+      x: lp.x, y: lp.y + 15,
+      'text-anchor': 'middle',
+      'dominant-baseline': 'central',
+      'font-size': '12',
+      'font-weight': '600',
+      'letter-spacing': '0.05em',
+      fill: '#1a1a2e',
+      'pointer-events': 'none',
+      opacity: '0.85',
+    });
+    text.textContent = opts[i].label;
+    g.appendChild(text);
+  }
+
+  const center = createSVGElement('circle', {
+    cx, cy, r: INNER_R - 5,
+    fill: 'rgba(255,255,255,0.85)',
+    stroke: 'rgba(0,0,0,0.08)',
+    'stroke-width': '0.5',
+  });
+  g.appendChild(center);
+
+  const centerText = createSVGElement('text', {
+    x: cx, y: cy,
+    'text-anchor': 'middle',
+    'dominant-baseline': 'central',
+    'font-size': '12',
+    'font-weight': '500',
+    'letter-spacing': '0.05em',
+    fill: 'rgba(0,0,0,0.55)',
+    id: 'pie-center-label',
+    'pointer-events': 'none',
+  });
+  centerText.textContent = '✕';
+  g.appendChild(centerText);
+
+  svg.appendChild(g);
+  overlay.classList.add('active');
+}
+
+// ── Update highlight ───────────────────────────────────
+function updateHighlight(px, py) {
+  if (!activePie) return;
+  const dx = px - activePie.cx;
+  const dy = py - activePie.cy;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+
+  const sectors = svg.querySelectorAll('.pie-sector');
+  const centerLabel = document.getElementById('pie-center-label');
+
+  if (dist < DEAD_ZONE) {
+    if (activePie.highlighted !== -1) {
+      sectors.forEach(s => { s.setAttribute('fill-opacity', '0.2'); });
+      activePie.highlighted = -1;
+      if (centerLabel) centerLabel.textContent = '✕';
+    }
+    return;
+  }
+
+  let angle = Math.atan2(dx, -dy) * 180 / Math.PI;
+  if (angle < 0) angle += 360;
+
+  const n = activePie.options.length;
+  const sliceAngle = 360 / n;
+  let adjusted = angle - activePie.offset;
+  adjusted = ((adjusted % 360) + 360) % 360;
+  const idx = Math.floor(adjusted / sliceAngle);
+
+  if (idx !== activePie.highlighted) {
+    if (navigator.vibrate) navigator.vibrate(8);
+    sectors.forEach((s, i) => {
+      s.setAttribute('fill-opacity', i === idx ? '0.45' : '0.1');
+    });
+    activePie.highlighted = idx;
+    if (centerLabel) centerLabel.textContent = activePie.options[idx].label;
+  }
+}
+
+// ── Activate selection ─────────────────────────────────
+function activateSelection() {
+  if (!activePie) return;
+  const idx = activePie.highlighted;
+  const regionName = activePie.region;
+
+  hidePie();
+
+  if (idx < 0) return;
+
+  const opt = regions[regionName].options[idx];
+  handleAction(regionName, opt.label);
+  showToast(`${opt.icon} ${opt.label}`);
+}
+
+function hidePie() {
+  overlay.classList.remove('active');
+  svg.innerHTML = '';
+  activePie = null;
+}
+
+// ── Action handlers ────────────────────────────────────
+function handleAction(region, action) {
+  const s = state[region];
+  switch (region) {
+    case 'climate':
+      if (action === 'Temp +') s.temp = Math.min(30, s.temp + 0.5);
+      else if (action === 'Temp −') s.temp = Math.max(16, s.temp - 0.5);
+      else if (action === 'Fan +') s.fan = Math.min(7, s.fan + 1);
+      else if (action === 'Fan −') s.fan = Math.max(0, s.fan - 1);
+      else if (action === 'Defrost F') s.defrostF = !s.defrostF;
+      else if (action === 'Defrost R') s.defrostR = !s.defrostR;
+      else if (action === 'AC') s.ac = !s.ac;
+      else if (action === 'Auto') s.auto = !s.auto;
+      break;
+    case 'drive':
+      if (action === 'Headlights') s.lights = s.lights === 'on' ? 'off' : s.lights === 'off' ? 'auto' : 'on';
+      else if (action === 'High beam') s.highBeam = !s.highBeam;
+      else if (action === 'Hazards') s.hazards = !s.hazards;
+      else if (action === 'Wipers') s.wipers = !s.wipers;
+      else if (action === 'Lock') s.locked = !s.locked;
+      else if (action === 'Trunk') s.trunk = !s.trunk;
+      break;
+    case 'media':
+      if (action === 'Vol +') s.vol = Math.min(100, s.vol + 5);
+      else if (action === 'Vol −') s.vol = Math.max(0, s.vol - 5);
+      else if (action === 'Play/Pause') s.playing = !s.playing;
+      else if (action === 'Next' || action === 'Prev') {}
+      else if (action === 'Source') {
+        const sources = ['Bluetooth', 'Radio', 'USB', 'AUX'];
+        s.source = sources[(sources.indexOf(s.source) + 1) % sources.length];
+      }
+      else if (action === 'Nav audio') s.navAudio = !s.navAudio;
+      break;
+    case 'vehicle':
+      if (action === 'Seat heat') s.seatHeat = (s.seatHeat + 1) % 4;
+      else if (action === 'Mirrors') s.mirrors = !s.mirrors;
+      else if (action === 'Camera') s.camera = !s.camera;
+      break;
+  }
+  updateStateDisplays();
+}
+
+function updateStateDisplays() {
+  const s = state;
+  const $ = id => document.getElementById(id);
+  $('state-climate').textContent = `${s.climate.temp} °C · Fan ${s.climate.fan} · ${s.climate.ac ? 'AC' : '—'} · ${s.climate.auto ? 'Auto' : 'Manual'}`;
+  $('state-drive').textContent = `Lights: ${s.drive.lights}${s.drive.highBeam ? ' · High' : ''}${s.drive.hazards ? ' · ⚠ HAZ' : ''}${s.drive.wipers ? ' · Wipers' : ''} · ${s.drive.locked ? 'Locked' : 'Unlocked'}${s.drive.trunk ? ' · Trunk' : ''}`;
+  $('state-media').textContent = `Vol: ${s.media.vol}% · ${s.media.playing ? '▶' : '⏸'} · ${s.media.source}${s.media.navAudio ? '' : ' · Nav muted'}`;
+  const heatLabels = ['Off', 'Low', 'Med', 'High'];
+  $('state-vehicle').textContent = `Seat heat: ${heatLabels[s.vehicle.seatHeat]}${s.vehicle.camera ? ' · Cam' : ''}`;
+}
+
+// ── Toast ──────────────────────────────────────────────
+function showToast(msg) {
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1500);
+}
+
+// ── Event handling ─────────────────────────────────────
+function getRegionFromElement(el) {
+  const region = el.closest('.region');
+  return region ? region.dataset.region : null;
+}
+
+// Touch events
+document.getElementById('grid').addEventListener('touchstart', e => {
+  if (activePie) return;
+  const touch = e.touches[0];
+  const regionName = getRegionFromElement(document.elementFromPoint(touch.clientX, touch.clientY));
+  if (!regionName) return;
+  e.preventDefault();
+  showPie(regionName, touch.clientX, touch.clientY);
+}, { passive: false });
+
+document.addEventListener('touchmove', e => {
+  if (!activePie) return;
+  e.preventDefault();
+  updateHighlight(e.touches[0].clientX, e.touches[0].clientY);
+}, { passive: false });
+
+document.addEventListener('touchend', e => {
+  if (!activePie) return;
+  e.preventDefault();
+  activateSelection();
+}, { passive: false });
+
+document.addEventListener('touchcancel', () => {
+  hidePie();
+});
+
+// Mouse events (for desktop testing)
+let mouseDown = false;
+document.getElementById('grid').addEventListener('mousedown', e => {
+  if (activePie) return;
+  const regionName = getRegionFromElement(e.target);
+  if (!regionName) return;
+  e.preventDefault();
+  mouseDown = true;
+  showPie(regionName, e.clientX, e.clientY);
+});
+
+document.addEventListener('mousemove', e => {
+  if (!activePie || !mouseDown) return;
+  updateHighlight(e.clientX, e.clientY);
+});
+
+document.addEventListener('mouseup', e => {
+  if (!activePie || !mouseDown) return;
+  mouseDown = false;
+  activateSelection();
+});
+
+// ── Init ───────────────────────────────────────────────
+updateStateDisplays();
+</script>
+</body>
+</html>

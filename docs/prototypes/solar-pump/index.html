@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Solar pump</title>
+	<style type="text/css">
+		* {
+			box-sizing: border-box;
+			text-align: center;
+		}
+		.wrap {
+			padding: 16px;
+		}
+		.cal {
+			display: flex;
+			flex-flow: column wrap;
+		}
+		.title {
+			font-weight: bold;
+			align-self: center;
+			margin-top: 16px;
+		}
+		.data-wrap {
+			display: flex;
+			flex-flow: row wrap;
+			justify-content: center;
+		}
+		.data-wrap-col{
+			padding: 16px;
+			display: flex;
+			flex-flow: column;
+			background: #ddd;
+			box-shadow: 1px 1px 4px 0 #0004;
+			border-radius: 16px;
+		}
+		.data-row {
+			margin: 2px;
+			padding: 2px;
+			display: flex;
+			flex-flow: row wrap;
+			justify-content: center;
+		}
+		.data-col {
+			margin: 2px;
+			padding: 2px;
+			display: flex;
+			flex-flow: column wrap;
+		}
+		.data-row div, .data-row input, .data-row button{
+			padding: 8px;
+			margin: 4px;
+			border-radius: 8px;
+			border: none;
+		}
+		.data-row div {
+			padding: 4px;
+		}
+		.calc-btn {
+			background: #5555;
+		}
+		#calc-btn:hover {
+			background: #5555;
+			box-shadow: 1px 1px 4px 0 #0008;
+		}
+		.separator {
+			border-top: 1px solid #5554;
+			margin: 8px;
+		}
+	</style>
+</head>
+<body>
+	<div class="wrap">
+		<form name="cal" class="cal">
+			<div class="data-wrap">
+				<div class="data-wrap-col">
+					<div class="title">Coste de bomba</div>
+					<div class="data-row">
+						<div class="data-col">
+							<div>Potencia (W)</div>
+							<input type="text" name="power" value="735">
+						</div>
+						<div class="data-col">
+							<div>Horas diarias</div>
+							<input type="text" name="hours" value="5">
+						</div>
+						<div class="data-col">
+							<div>Años</div>
+							<input type="text" name="years" value="20">
+						</div>
+						<div class="data-col">
+							<div>Coste por kWh</div>
+							<input type="text" name="cost" value="0.17">
+						</div>
+					</div>
+					<div class="data-row">
+						<div>
+							<input type="text" name="pump_result" placeholder="coste eléctrico (euros)">
+						</div>
+						<div>
+							<input type="button" value="calc" class="calc-btn" onclick="cal.pump_result.value = eval(
+							cal.power.value * cal.hours.value * .365 * cal.years.value * cal.cost.value)">
+						</div>
+					</div>
+					<div class="separator">
+						
+					</div>
+					<div class="title">Coste de paneles (W y €)</div>
+					<div class="data-row">
+						<div class="data-col">
+							<div>Potencia necesaria</div>
+							<input type="text" name="total_panel_power" value="735">
+						</div>
+						<div class="data-col">
+							<div>Potencia panel</div>
+							<input type="text" name="panel_power" value="280">
+						</div>
+						<div class="data-col">
+							<div>Coste panel</div>
+							<input type="text" name="panel_cost" value="132">
+						</div>
+					</div>
+					<div class="data-row">
+						<div class="data-col">
+							<div>Cantidad paneles</div>
+							<input type="text" name="panel_quantity">
+						</div>
+						<div class="data-col">
+							<div>Coste paneles</div>
+							<input type="text" name="total_panel_cost">
+						</div>
+						<input type="button" value="calc" class="calc-btn" id="calc_btn" onclick="
+							cal.total_panel_cost.value = eval(cal.panel_cost.value * Math.ceil(cal.total_panel_power.value / cal.panel_power.value));
+							cal.panel_quantity.value = eval(Math.ceil(cal.total_panel_power.value / cal.panel_power.value));">
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</body>
+</html>
