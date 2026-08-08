@@ -47,8 +47,23 @@ Air coupler (sorted by priority):
 - Other (standard, human-readable; not Windows filename-safe due to ``:``):
     - RFC 3339 / ISO 8601 extended: ``1999-07-02T23:59:59+02:00``
 
+- Display only (a human reads it off a screen, nothing reads it back):
+    - ``2 July 1999`` or ``2 July 1999, 23:59 UTC``
+    - Day first, month spelled out in full, year last. 24-hour clock, and name the zone when the
+      time shown isn't the reader's own.
+    - Clearest form there is for a reader — ``2 July`` cannot be misread the way ``07/02`` can,
+      which is why it's worth having. But it is the worst form to parse: ``jul``, ``Jul``,
+      ``july``, ``July``, ``JUL``, and every other language's spelling all mean the same month, so
+      reading it back is guesswork. Writing the month in full and always in English keeps it to one
+      spelling if something ever has to.
+    - So: never in a filename, never stored, never sent between programs. Those use the primary
+      form above, and the display string is produced from it at the last moment.
+
 - Avoid:
     - ``02/07/1999_23:59:59``
+    - ``Jul 2, 1999`` — abbreviated month, and month-first, which reads as 2 July to some and
+      7 February to others. If it's for a human use the display form; if anything parses it, use
+      the primary form.
 - Address format: SPAIN, MADRID, FUENLABRADA 12345 (postal code), STREET ABCDE, 24, block 1, doorway 1, floor 3, door A
 
 
