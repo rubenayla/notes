@@ -45,7 +45,8 @@ Auto-deploys on push to `main` via `.github/workflows/deploy.yml` (GitHub Pages)
 3. Write it for the outside reader (see Audience priority).
 
 ## Agent Files
-- `tasks.md` (repo root) — task board (TODO / In Progress / Done). One `tasks.md` per repo, always at the root — there is no `.agents/tasks.md`.
+- `tasks.md` (repo root) — task board, open items only. One `tasks.md` per repo, always at the root — there is no `.agents/tasks.md`.
+- `tasks/done-archive.md` — closed items, moved here verbatim (with their date and closing note) once done. Nothing in it is actionable; read it only for the history of a shipped item. Same convention as `partle` and `kart-medulla`. A done step of a task whose cluster is still open stays on the live board until the whole cluster closes — only standalone or fully-finished items move.
 - `history.md` (repo root) — dated record of decisions and context (grep, never read in full)
 - `.agents/error-log.md` — mistakes and prevention rules
 
