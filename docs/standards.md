@@ -14,7 +14,7 @@ Some of these I wish were universal (they're just better). Others are personal p
 - For engineering: mmgs or mks unit system, and Std number format for simple numbers, but Engineering format with 4 significant figures for >1000 and <0.01.
 
 ## Identifiers
-For products, designs, and physical inventory, distinguish the level being identified. These names are useful in data models; the familiar industry terms remain in parentheses.
+For products, designs, and physical inventory, distinguish the level being identified. These are recommended schema keys for data models; the familiar industry terms remain in parentheses.
 
 - **`design_id`** identifies the underlying design family.
 - **`variant_id`** identifies a specific configuration of that design, such as a colour, size, connector, or hardware revision.
