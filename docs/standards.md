@@ -13,6 +13,17 @@ Some of these I wish were universal (they're just better). Others are personal p
 - Also ºC, Nit (cd/m2), lm, and lx (lm/m^2, illumination of surface instead of an angle).
 - For engineering: mmgs or mks unit system, and Std number format for simple numbers, but Engineering format with 4 significant figures for >1000 and <0.01.
 
+## Identifiers
+For products, designs, and physical inventory, distinguish the level being identified. These names are useful in data models; the familiar industry terms remain in parentheses.
+
+- **`design_id`** identifies the underlying design family.
+- **`variant_id`** identifies a specific configuration of that design, such as a colour, size, connector, or hardware revision.
+- **`batch_id`** identifies the manufacturing batch (lot number or batch number).
+- **`unit_id`** identifies one physical instance (serial number or S/N). A serial number is not necessarily sequential; it is simply intended to be unique within the relevant system.
+- **`asset_id`** identifies the record used to track an item in a particular organisation's inventory. It is optional and belongs to the owner, not necessarily the manufacturer.
+
+The first four describe the product's manufacturing identity. `asset_id` describes local ownership or tracking.
+
 ## Pneumatics
 Air coupler (sorted by priority):
 
