@@ -51,5 +51,7 @@ Auto-deploys on push to `main` via `.github/workflows/deploy.yml` (GitHub Pages)
 - `.agents/error-log.md` — mistakes and prevention rules
 
 ## standards.md conventions
+- Treat a new standard or a change in meaning as a proposal and get Rubén's explicit approval before
+  editing `standards.md`, because the page publicly presents his own settled choices.
 - Entries are full sentences that name whose claim it is and whether it was verified — not bare comma-lists of specs (a spec scraped off the wrong model once became a "deciding factor"; full sentences force you to attribute the claim).
 - The `Anti-Standards, do not use` section pairs each rejected default with the alternative to use instead and a `??? note "Why not"` collapsible. Follow that exact pattern when adding an entry; don't inline justification prose at the top of an item.

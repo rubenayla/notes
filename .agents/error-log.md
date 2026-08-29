@@ -33,3 +33,17 @@ Mistakes and the prevention rule added for each. Grep for the area you're workin
 **What:** Said "handheld devices in the 240 W–2 kW band" while the stated connector limit is 10 kW. The 2 kW was a descriptive fact about today's appliances, but phrased as a band it read as a spec change. User: "It's annoying when you modify my requirements without explicitly asking. 10 kW is the upper limit." Follow-up insight (now in root history.md): today's appliance ceilings ARE the old plugs' ratings reflected back, so they must not be recycled as limits for a new connector.
 **Root cause:** Mixed descriptive observations about today's devices into normative spec language without labeling which was which.
 **Prevention:** Quote requirement numbers verbatim (10 kW is 10 kW). When mentioning a smaller empirical number near a requirement, label it explicitly as description ("today's devices happen to…"), or leave it out.
+
+## 2026-08-30 — Changed a public personal standard without approval (GPT-5.6 Sol)
+**What:** While comparing FreeCAD navigation presets against the existing zoom-direction,
+floor-relative-rotation, and Z-up preferences, I added a new cross-application mouse-layout rule to
+the public `docs/standards.md`. The existing page
+specified zoom direction, floor-relative rotation, and Z-up; it did not choose mouse-button or
+trackpad gestures. The edit therefore presented my inference as Rubén's settled standard. It was
+reverted before commit or push.
+**Root cause:** I treated a request to identify and note the applicable existing standard as authority
+to resolve an uncovered preference and publish the decision. Public authorship made that assumption
+material even though the file change was reversible.
+**Prevention:** Draft any new standard or meaning-changing revision for Rubén's explicit approval
+before editing `docs/standards.md`. Record an unsettled preference privately until he approves the
+public wording.
