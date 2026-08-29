@@ -492,6 +492,12 @@ void set_gear(f64 engine_rpm) {
     - ``ORF``: Orbital Reference Frame
 - mmgs
 - Wheel forwards to zoom in (Me moving, not the object)
+
+    ??? note "Trackpad navigation"
+        On a Mac trackpad, use gesture-based navigation: two-finger scrolling pans and two-finger
+        click-dragging orbits. In Fusion, use the Tinkercad mouse preset with Constrained Orbit,
+        Reverse zoom direction, and gesture-based view navigation enabled.
+
 - 3rd angle projection (American).
 
     ??? note "Why 3rd-angle over 1st-angle"

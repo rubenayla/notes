@@ -119,3 +119,10 @@ Rationale: tasks are the project's tasks regardless of who does them. Two files 
 `AGENTS.md`'s "Agent Files" list now points at `tasks.md` at the root, next to `history.md`.
 
 Stale `.agents/tasks.md` paths in append-only records (this file and `.agents/error-log.md`) were deliberately left as written — they were accurate on the date they were logged, and rewriting them would falsify the record.
+
+## 2026-08-30 — Added the approved Mac trackpad navigation standard
+
+Rubén approved a collapsed note under the CAD zoom preference. It records his verified Fusion setup:
+two-finger scroll pans, two-finger click-drag orbits, Tinkercad mouse preset, Constrained Orbit,
+Reverse zoom direction, and gesture-based navigation enabled. The collapsible keeps application-
+specific setup detail out of the main standards list.
