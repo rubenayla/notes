@@ -246,7 +246,7 @@ Length calculated with Pitch and Pin Qty, width is lead span, height given.
 - Dremel tip: 1/8 in (3.175mm)
 - A current standard: M0.6, M1, M1.6, M2.5 T8, M4 T20 E5, M6 T30 E8, M8, M10 T50 E12, M16, M24, M40
 - TORX (hexalobular, 6lobe) internal Screw head (Flush) with ISO metric screw threads.
-- I would also consider Robertson and torx plus, but forget about flat, philips, or pozidriv.
+- I would also consider Torx Plus, but forget about flat, Phillips, or Pozidriv.
 - Torx nuts (that can also be screwed with hex key and viceversa) with the same torx external head as the screw's one.
 
     ??? note "If the standard were redesigned"

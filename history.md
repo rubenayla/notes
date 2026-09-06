@@ -126,3 +126,17 @@ Rubén approved a collapsed note under the CAD zoom preference. It records his v
 two-finger scroll pans, two-finger click-drag orbits, Tinkercad mouse preset, Constrained Orbit,
 Reverse zoom direction, and gesture-based navigation enabled. The collapsible keeps application-
 specific setup detail out of the main standards list.
+
+## 2026-09-06 — Removed Robertson from the screw-drive candidates
+
+At the author's direction, removed Robertson from the candidate screw-drive list.
+Reviewed TORX PLUS as a possible replacement default: its core US geometry patent, US 5,207,132,
+expired on 2011-10-16, while `TORX PLUS` remains a trademark. Its larger, elliptic lobes provide
+better torque transfer and tool life when used with a matching IP bit, but it is not universally
+better: a standard TORX bit can turn a TORX PLUS recess with reduced torque capacity, whereas an IP
+bit does not fit a standard TORX recess. Availability and repair compatibility therefore remain
+real trade-offs. No change to the TORX default was made without a further explicit author decision.
+
+Sources: [US 5,207,132](https://patents.google.com/patent/US5207132A/en),
+[iFixit compatibility explanation](https://www.ifixit.com/News/110702/torx-plus-the-high-tech-screw-hiding-in-our-gadgets),
+and [EJOT drive comparison](https://www.ejot.com/Industrial-Fasteners-Division/Products/TORX%C2%AE-TORX-PLUS%C2%AE/p/VBT_TORX).
