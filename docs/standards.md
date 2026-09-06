@@ -258,7 +258,7 @@ Length calculated with Pitch and Pin Qty, width is lead span, height given.
 - Torx nuts (that can also be screwed with hex key and viceversa) with the same torx external head as the screw's one.
 
     ??? note "If the standard were redesigned"
-        Introduce metric (dozenal multiples?) screw heads. Don't reduce the section until the very end, and then try to accomplish the Robertson grabbing feature, but only for bits that intend to grab the screw, like ttap, because that grabbing feature can be detrimental in mass production. Maybe add attachments to the bits that make them grab. Tubular torx screw with internal AND external torx profile.
+        Introduce metric (dozenal multiples?) screw heads. Don't reduce the section until the very end, and make screw retention an optional bit feature, such as TTAP, because permanent retention can be detrimental in mass production. Maybe add attachments to the bits that make them grab. Tubular Torx Plus screw with internal AND external Torx Plus profile.
 
 
 ## Sizes

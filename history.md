@@ -153,3 +153,9 @@ one. Minor gains do not justify transition cost; large gains do.
 
 Sources: [TORX PLUS torque table](https://www.arnold-fastening.com/fileadmin/templates/_media/pdf/produkte/TORX-PLUS-EN.pdf)
 and [manufacturer FEA summary](https://www.stanleyengineeredfastening.com/-/media/Web/SEF/Resources/Docs/Other/Torx_Plus_flyer.pdf).
+
+## 2026-09-06 — Corrected the future screw-drive note's retention wording
+
+Removed the remaining Robertson reference from the public future-design note. It now describes a
+generic optional screw-retention feature and uses TTAP only as an example; TTAP and TORX PLUS Stick
+Fit are proprietary retention variants, not part of the patent-expired core TORX PLUS geometry.
