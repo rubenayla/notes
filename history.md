@@ -169,3 +169,9 @@ TORX PLUS Stick Fit is proprietary, so neither geometry is assumed free to use.
 
 Sources: [TTAP patent status](https://patents.google.com/patent/US10731692B2/en) and
 [TORX PLUS Stick Fit description](https://kebafastenings.com/product/torx-plus-stick-fit/).
+
+## 2026-09-06 — Scoped the retention proposal to TORX PLUS Stick Fit
+
+The author decided to ignore TTAP after adopting TORX PLUS. The public proposal now concerns only a
+compatible ordinary-IP / TORX-PLUS-Stick-Fit-bit pair; the historical TTAP research remains above as
+context for the discarded branch.

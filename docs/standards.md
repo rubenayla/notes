@@ -258,7 +258,7 @@ Length calculated with Pitch and Pin Qty, width is lead span, height given.
 - Torx nuts (that can also be screwed with hex key and viceversa) with the same torx external head as the screw's one.
 
     ??? note "Optional stick-fit retention (proposal)"
-        A future Torx Plus screw should remain fully drivable with an ordinary IP bit, while a dedicated stick-fit bit can retain it whenever a human or machine needs that handling aid. This preserves one compatible fastener instead of creating separate human and automated-assembly systems. Do not adopt an existing retention geometry as the standard yet: TTAP is patent-protected and Torx Plus Stick Fit is proprietary, so neither should be treated as free to use. The compatibility requirement is an aspiration for a future open design, not a claim that current variants meet it.
+        A future Torx Plus screw should remain fully drivable with an ordinary IP bit, while a dedicated Torx Plus Stick Fit bit can retain it whenever a human or machine needs that handling aid. This preserves one compatible fastener instead of creating separate human and automated-assembly systems. Do not adopt the existing Torx Plus Stick Fit geometry as the standard yet: it is proprietary and should not be treated as free to use. The compatibility requirement is an aspiration for a future open design, not a claim that the current variant meets it.
 
     ??? note "If the standard were redesigned"
         Introduce metric (dozenal multiples?) screw heads. Don't reduce the section until the very end. Maybe add attachments to the bits that make them grab. Tubular Torx Plus screw with internal AND external Torx Plus profile.
