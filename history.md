@@ -140,3 +140,16 @@ real trade-offs. No change to the TORX default was made without a further explic
 Sources: [US 5,207,132](https://patents.google.com/patent/US5207132A/en),
 [iFixit compatibility explanation](https://www.ifixit.com/News/110702/torx-plus-the-high-tech-screw-hiding-in-our-gadgets),
 and [EJOT drive comparison](https://www.ejot.com/Industrial-Fasteners-Division/Products/TORX%C2%AE-TORX-PLUS%C2%AE/p/VBT_TORX).
+
+## 2026-09-06 — TORX PLUS adopted as the default internal screw drive
+
+The author approved TORX PLUS (IP) as the default internal drive for new designs. Matched tooling
+is assumed, so its incompatibility with legacy TORX recesses is not a reason to retain the older
+drive. The public standard records the measured torque range and tooling requirement.
+
+The author also adopted a general standard-selection rule: replace an established standard only for
+a material improvement, but do not let temporary scarcity or familiarity perpetuate an inferior
+one. Minor gains do not justify transition cost; large gains do.
+
+Sources: [TORX PLUS torque table](https://www.arnold-fastening.com/fileadmin/templates/_media/pdf/produkte/TORX-PLUS-EN.pdf)
+and [manufacturer FEA summary](https://www.stanleyengineeredfastening.com/-/media/Web/SEF/Resources/Docs/Other/Torx_Plus_flyer.pdf).

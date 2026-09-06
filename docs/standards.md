@@ -6,6 +6,14 @@ There's also an anti-standards section at the bottom: things that just don't mak
 
 Some of these I wish were universal (they're just better). Others are personal preference.
 
+## Choosing standards
+
+The author replaces an established standard only when its successor makes a material improvement;
+a marginal gain does not repay the cost of changing tools, parts, and habits. But current prevalence
+alone is not a reason to preserve an inferior default. When the improvement is substantial, adopt
+the better standard and accept that its availability will take time to catch up. Otherwise, familiar
+but subpar standards become entrenched for decades before they are eventually replaced.
+
 ## Units
 - Reference: [Neufert — *Architects' Data*](https://en.wikipedia.org/wiki/Architects%27_Data)
 - 7 fundamental units: m, kg, s, K, A, mol, cd.
@@ -244,9 +252,9 @@ Length calculated with Pitch and Pin Qty, width is lead span, height given.
     - If you want to skip the pitch: M8xx24mm
 - Screwdriver tip bit hexagonal connector sizes: 4mm, 1/4 in (6.35mm),
 - Dremel tip: 1/8 in (3.175mm)
-- A current standard: M0.6, M1, M1.6, M2.5 T8, M4 T20 E5, M6 T30 E8, M8, M10 T50 E12, M16, M24, M40
-- TORX (hexalobular, 6lobe) internal Screw head (Flush) with ISO metric screw threads.
-- I would also consider Torx Plus, but forget about flat, Phillips, or Pozidriv.
+- A current standard: M0.6, M1, M1.6, M2.5 8IP, M4 20IP, M6 30IP, M8, M10 50IP, M16, M24, M40.
+- **TORX PLUS** (IP, internal six-lobe) is the default flush screw head for new designs with ISO metric threads. Its elliptical profile gives about 20–27% more transferable torque than like-sized TORX in an independent fastener-maker comparison; manufacturer analysis reports about 25% greater ultimate torsional strength and twice the bit fatigue life. Specify and use the matching IP bit.
+- Use ordinary TORX only where an existing component or the intended maintainer's tooling requires it. Do not use flat, Phillips, or Pozidriv.
 - Torx nuts (that can also be screwed with hex key and viceversa) with the same torx external head as the screw's one.
 
     ??? note "If the standard were redesigned"
