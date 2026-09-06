@@ -252,7 +252,7 @@ Length calculated with Pitch and Pin Qty, width is lead span, height given.
     - If you want to skip the pitch: M8xx24mm
 - Screwdriver tip bit hexagonal connector sizes: 4mm, 1/4 in (6.35mm),
 - Dremel tip: 1/8 in (3.175mm)
-- A current standard: M0.6, M1, M1.6, M2.5 8IP, M4 20IP, M6 30IP, M8, M10 50IP, M16, M24, M40.
+- A current standard: M0.6, M1, M1.6, M2.5 8IP (**Internal Plus**), M4 20IP, M6 30IP, M8, M10 50IP, M16, M24, M40.
 - **TORX PLUS** (IP, internal six-lobe) is the default flush screw head for new designs with ISO metric threads. Its elliptical profile gives about 20–27% more transferable torque than like-sized TORX in an independent fastener-maker comparison; manufacturer analysis reports about 25% greater ultimate torsional strength and twice the bit fatigue life. Specify and use the matching IP bit.
 - Use ordinary TORX only where an existing component or the intended maintainer's tooling requires it. Do not use flat, Phillips, or Pozidriv.
 - Torx nuts (that can also be screwed with hex key and viceversa) with the same torx external head as the screw's one.
