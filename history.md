@@ -159,3 +159,13 @@ and [manufacturer FEA summary](https://www.stanleyengineeredfastening.com/-/medi
 Removed the remaining Robertson reference from the public future-design note. It now describes a
 generic optional screw-retention feature and uses TTAP only as an example; TTAP and TORX PLUS Stick
 Fit are proprietary retention variants, not part of the patent-expired core TORX PLUS geometry.
+
+## 2026-09-06 — Added the proposed compatible stick-fit direction
+
+The author wants one future TORX PLUS fastener that accepts both ordinary IP bits and a dedicated
+stick-fit bit, allowing people and machines to use the same screws while retaining a screw only when
+that is useful. It is recorded as a proposal, not adopted geometry: TTAP is patent-protected and
+TORX PLUS Stick Fit is proprietary, so neither geometry is assumed free to use.
+
+Sources: [TTAP patent status](https://patents.google.com/patent/US10731692B2/en) and
+[TORX PLUS Stick Fit description](https://kebafastenings.com/product/torx-plus-stick-fit/).
