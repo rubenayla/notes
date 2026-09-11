@@ -40,6 +40,8 @@ nav:
     - Power delivery & DC connector: ideas/power-delivery-dc-connector.md
     - Dozenal (base 12): ideas/dozenal.md
     - Fundamental distance unit: ideas/fundamental-distance-unit.md
+  - Repairs:
+    - Vaporeta sin vapor: unitekno-steam-valve-repair.md
   - Prototypes: prototypes.md
   - Home design ↗: https://rubenayla.github.io/home-design/
   - Portfolio ↗: https://rubenayla.xyz/

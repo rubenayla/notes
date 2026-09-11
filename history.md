@@ -175,3 +175,7 @@ Sources: [TTAP patent status](https://patents.google.com/patent/US10731692B2/en)
 The author decided to ignore TTAP after adopting TORX PLUS. The public proposal now concerns only a
 compatible ordinary-IP / TORX-PLUS-Stick-Fit-bit pair; the historical TTAP research remains above as
 context for the discarded branch.
+
+## 2026-09-12 — Unitekno valve repair note
+
+Added the Spanish documented repair case at `docs/unitekno-steam-valve-repair.md`. Rubén requested placing the technical and safety explanation on this site and in the video description, keeping the video itself to footage and captions. The text reuses the reviewed description; the video link will be added after publication. Strict MkDocs build passed.
