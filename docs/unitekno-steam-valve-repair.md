@@ -1,4 +1,6 @@
-# La vaporeta hace clic, pero no sale vapor
+# Unitekno 703: hace clic, pero no sale vapor
+
+[Ver la reparación en vídeo (1:37)](https://www.youtube.com/watch?v=kDy1av3_IbU)
 
 La vaporeta calentaba y hacía clic al pulsar el gatillo, pero no salía vapor. En este caso, la avería estaba en el émbolo de la electroválvula, que se había quedado atascado.
 

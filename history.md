@@ -179,3 +179,8 @@ context for the discarded branch.
 ## 2026-09-12 — Unitekno valve repair note
 
 Added the Spanish documented repair case at `docs/unitekno-steam-valve-repair.md`. Rubén requested placing the technical and safety explanation on this site and in the video description, keeping the video itself to footage and captions. The text reuses the reviewed description; the video link will be added after publication. Strict MkDocs build passed.
+
+
+## 2026-09-12 — Linked approved repair video
+
+Rubén approved the simple edit with its opening restored and requested an Unlisted YouTube upload. Linked video `kDy1av3_IbU` from the Spanish Unitekno 703 note and added the machine model to the heading. The text retains the visual-identification caveat and does not invent a full CEME article number. Rubén will change YouTube visibility himself after another review.
