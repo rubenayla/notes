@@ -4,7 +4,7 @@
 
 La vaporeta calentaba y hacía clic al pulsar el gatillo, pero no salía vapor. En este caso, la avería estaba en el émbolo de la electroválvula, que se había quedado atascado.
 
-La máquina coincide por su aspecto con una Unitekno 703. La electroválvula es CEME; el número completo de referencia no se distingue en estos vídeos, así que no lo doy por confirmado.
+La máquina es una Unitekno 703. La electroválvula es una CEME 6628EN2.0S.X1F, serie 688; la bobina también está marcada EV576 D, 230 V CA, 50 Hz y 17 VA.
 
 Con la máquina desenchufada, fría y sin presión, se desmontó la válvula. Un imán y un golpe ligero liberaron el émbolo. Con el imán mantenía el paso abierto; al retirarlo, cerraba. Después se pasó vinagre templado por la válvula abierta, se accionó varias veces y se aclaró muy bien con agua limpia. Tras montarla de nuevo, volvió a salir vapor.
 
