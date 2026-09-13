@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5f3ed">
+  <title>Offline screen ruler</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f5f3ed;
+      --ink: #171714;
+      --muted: #706f68;
+      --panel: rgba(255, 255, 255, .88);
+      --line: rgba(23, 23, 20, .2);
+      --accent: #d94a34;
+      --ruler-size: 72px;
+      --shadow: 0 18px 60px rgba(25, 24, 20, .12);
+    }
+
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --paper: #171816;
+      --ink: #f2f0e8;
+      --muted: #aaa9a2;
+      --panel: rgba(38, 39, 36, .9);
+      --line: rgba(242, 240, 232, .2);
+      --accent: #ff765d;
+      --shadow: 0 18px 60px rgba(0, 0, 0, .35);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    button, input, select { font: inherit; }
+
+    button, select, input[type="number"] {
+      min-height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel);
+      color: var(--ink);
+    }
+
+    button {
+      padding: 0 13px;
+      cursor: pointer;
+    }
+
+    button:hover { border-color: var(--ink); }
+    button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+
+    .toolbar {
+      position: fixed;
+      z-index: 20;
+      top: 12px;
+      left: 50%;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      max-width: calc(100vw - 24px);
+      padding: 7px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      transform: translateX(-50%);
+    }
+
+    .toolbar .group { display: flex; gap: 4px; }
+    .toolbar .divider { width: 1px; height: 26px; margin: 0 2px; background: var(--line); }
+    .toolbar button { min-height: 36px; padding: 0 11px; }
+
+    .status {
+      position: fixed;
+      z-index: 12;
+      left: 50%;
+      top: 82px;
+      margin: 0;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: var(--panel);
+      color: var(--muted);
+      font-size: 12px;
+      box-shadow: 0 4px 20px rgba(20, 20, 18, .08);
+      transform: translateX(-50%);
+      white-space: nowrap;
+    }
+
+    #stage { position: fixed; inset: 0; cursor: crosshair; }
+    canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+    .readout {
+      position: fixed;
+      z-index: 11;
+      display: none;
+      padding: 5px 8px;
+      border-radius: 7px;
+      background: var(--ink);
+      color: var(--paper);
+      font: 600 12px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+      pointer-events: none;
+    }
+
+    dialog {
+      width: min(560px, calc(100vw - 28px));
+      padding: 0;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--paper);
+      color: var(--ink);
+      box-shadow: var(--shadow);
+    }
+
+    dialog::backdrop { background: rgba(0, 0, 0, .42); backdrop-filter: blur(3px); }
+
+    .dialog-body { padding: 26px; }
+    .dialog-head { display: flex; align-items: start; justify-content: space-between; gap: 18px; }
+    h1 { margin: 0 0 7px; font-size: 24px; letter-spacing: -.03em; }
+    p { margin: 0; color: var(--muted); line-height: 1.5; }
+    .close { min-width: 40px; padding: 0; font-size: 22px; }
+
+    .tabs { display: flex; gap: 6px; margin: 22px 0 18px; }
+    .tabs button { flex: 1; }
+    .panel[hidden] { display: none; }
+
+    .card-preview {
+      width: 323px;
+      max-width: 100%;
+      aspect-ratio: 85.6 / 53.98;
+      margin: 18px auto;
+      border: 2px solid var(--accent);
+      border-radius: 12px;
+      background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 8%, transparent), transparent);
+      display: grid;
+      place-items: center;
+      color: var(--accent);
+      font-weight: 700;
+      letter-spacing: .02em;
+    }
+
+    .field { margin-top: 16px; }
+    .field label { display: flex; justify-content: space-between; gap: 14px; margin-bottom: 8px; font-size: 13px; color: var(--muted); }
+    .field input[type="range"] { width: 100%; accent-color: var(--accent); }
+    .number-row { display: flex; gap: 8px; margin-top: 16px; }
+    .number-row input { width: 100%; padding: 0 12px; }
+    .primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+    .tip { margin-top: 15px; font-size: 12px; }
+
+    .help-list { margin: 18px 0 0; padding-left: 20px; color: var(--muted); line-height: 1.7; }
+    kbd { padding: 2px 6px; border: 1px solid var(--line); border-radius: 5px; background: var(--panel); color: var(--ink); }
+
+    @media (max-width: 720px) {
+      .toolbar { left: 10px; right: 10px; overflow-x: auto; transform: none; }
+      .toolbar button { white-space: nowrap; }
+      .status { top: 76px; }
+    }
+  </style>
+</head>
+<body>
+  <main id="stage" aria-label="Screen ruler. Click to add a guide line.">
+    <canvas id="ruler"></canvas>
+    <div class="readout" id="readout"></div>
+  </main>
+
+  <nav class="toolbar" aria-label="Ruler controls">
+    <div class="group" aria-label="Units">
+      <button data-unit="cm" aria-pressed="true">cm</button>
+      <button data-unit="in" aria-pressed="false">in</button>
+      <button data-unit="px" aria-pressed="false">px</button>
+    </div>
+    <span class="divider"></span>
+    <div class="group" aria-label="Ruler edges">
+      <button data-edge="top" aria-pressed="true">Top</button>
+      <button data-edge="right" aria-pressed="false">Right</button>
+      <button data-edge="bottom" aria-pressed="false">Bottom</button>
+      <button data-edge="left" aria-pressed="true">Left</button>
+    </div>
+    <span class="divider"></span>
+    <button id="clear" title="Clear guide lines (Esc)">Clear</button>
+    <button id="calibrate">Calibrate</button>
+    <button id="fullscreen" title="Fullscreen (F)">Full</button>
+    <button id="theme" title="Dark mode (D)">◐</button>
+    <button id="help" title="Help (H)">?</button>
+  </nav>
+
+  <p class="status" id="status"></p>
+
+  <dialog id="calibrationDialog">
+    <div class="dialog-body">
+      <div class="dialog-head">
+        <div>
+          <h1>Calibrate the ruler</h1>
+          <p>Browser zoom must be 100%. Your setting stays in this browser.</p>
+        </div>
+        <button class="close" data-close="calibrationDialog" aria-label="Close">×</button>
+      </div>
+
+      <div class="tabs" role="tablist">
+        <button data-tab="card" aria-pressed="true">Bank card</button>
+        <button data-tab="manual" aria-pressed="false">Known length</button>
+      </div>
+
+      <section class="panel" data-panel="card">
+        <p>Hold a standard bank card against the outline and adjust it until both widths match.</p>
+        <div class="card-preview" id="cardPreview">85.60 × 53.98 mm</div>
+        <div class="field">
+          <label for="ppiRange"><span>Card width</span><output id="ppiOutput"></output></label>
+          <input id="ppiRange" type="range" min="50" max="300" step="0.1">
+        </div>
+        <button class="primary" id="applyCard">Save calibration</button>
+      </section>
+
+      <section class="panel" data-panel="manual" hidden>
+        <p>Enter how many CSS pixels equal one inch. Use this if you already know the value for this display and browser zoom.</p>
+        <div class="number-row">
+          <input id="ppiNumber" type="number" min="20" max="1000" step="0.01" aria-label="CSS pixels per inch">
+          <button class="primary" id="applyManual">Save PPI</button>
+          <button id="resetCalibration">Reset</button>
+        </div>
+        <p class="tip">PPI means pixels per inch. The common uncalibrated browser estimate is 96.</p>
+      </section>
+    </div>
+  </dialog>
+
+  <dialog id="helpDialog">
+    <div class="dialog-body">
+      <div class="dialog-head">
+        <div>
+          <h1>Offline screen ruler</h1>
+          <p>A self-contained ruler that keeps working without the internet.</p>
+        </div>
+        <button class="close" data-close="helpDialog" aria-label="Close">×</button>
+      </div>
+      <ul class="help-list">
+        <li>Calibrate once for each display and keep browser zoom at 100%.</li>
+        <li>Click anywhere to add a guide line. Click a guide to remove it.</li>
+        <li><kbd>1</kbd>, <kbd>2</kbd>, <kbd>3</kbd> switch units.</li>
+        <li><kbd>F</kbd> toggles fullscreen; <kbd>D</kbd> changes theme; <kbd>Esc</kbd> clears guides.</li>
+        <li>The ruler, interface, and saved calibration use no network connection.</li>
+      </ul>
+    </div>
+  </dialog>
+
+  <script>
+    (() => {
+      'use strict';
+
+      const STORAGE_KEY = 'offline-ruler-settings-v1';
+      const canvas = document.querySelector('#ruler');
+      const ctx = canvas.getContext('2d');
+      const stage = document.querySelector('#stage');
+      const status = document.querySelector('#status');
+      const readout = document.querySelector('#readout');
+      const calibrationDialog = document.querySelector('#calibrationDialog');
+      const helpDialog = document.querySelector('#helpDialog');
+      const ppiRange = document.querySelector('#ppiRange');
+      const ppiNumber = document.querySelector('#ppiNumber');
+      const ppiOutput = document.querySelector('#ppiOutput');
+      const cardPreview = document.querySelector('#cardPreview');
+
+      const defaults = {
+        unit: 'cm',
+        ppi: 96,
+        calibrated: false,
+        theme: matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
+        edges: { top: true, right: false, bottom: false, left: true },
+        guides: []
+      };
+
+      let state = load();
+      let pointer = null;
+
+      function load() {
+        try {
+          const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+          return { ...defaults, ...saved, edges: { ...defaults.edges, ...(saved?.edges || {}) }, guides: [] };
+        } catch (_) {
+          return { ...defaults, edges: { ...defaults.edges }, guides: [] };
+        }
+      }
+
+      function save() {
+        const { guides, ...persistent } = state;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(persistent));
+      }
+
+      function css(name) {
+        return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+      }
+
+      function unitValue(px) {
+        if (state.unit === 'px') return px;
+        const inches = px / state.ppi;
+        return state.unit === 'in' ? inches : inches * 2.54;
+      }
+
+      function format(px) {
+        const value = unitValue(px);
+        if (state.unit === 'px') return `${Math.round(value)} px`;
+        return `${value.toFixed(value < 10 ? 2 : 1)} ${state.unit}`;
+      }
+
+      function tickDefinition() {
+        if (state.unit === 'px') return { spacing: 10, majorEvery: 10, mediumEvery: 5, labelScale: 1 };
+        if (state.unit === 'in') return { spacing: state.ppi / 16, majorEvery: 16, mediumEvery: 8, labelScale: 1 / 16 };
+        return { spacing: state.ppi / 25.4, majorEvery: 10, mediumEvery: 5, labelScale: 0.1 };
+      }
+
+      function setupCanvas() {
+        const dpr = devicePixelRatio || 1;
+        const width = innerWidth;
+        const height = innerHeight;
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        return { width, height };
+      }
+
+      function drawRuler(edge, width, height) {
+        const rulerSize = 72;
+        const horizontal = edge === 'top' || edge === 'bottom';
+        const length = horizontal ? width : height;
+        const { spacing, majorEvery, mediumEvery, labelScale } = tickDefinition();
+        const maxTicks = Math.ceil(length / spacing);
+
+        ctx.save();
+        ctx.fillStyle = css('--panel');
+        if (edge === 'top') ctx.fillRect(0, 0, width, rulerSize);
+        if (edge === 'bottom') ctx.fillRect(0, height - rulerSize, width, rulerSize);
+        if (edge === 'left') ctx.fillRect(0, 0, rulerSize, height);
+        if (edge === 'right') ctx.fillRect(width - rulerSize, 0, rulerSize, height);
+        ctx.strokeStyle = css('--ink');
+        ctx.fillStyle = css('--ink');
+        ctx.lineWidth = 1;
+        ctx.font = '11px ui-monospace, SFMono-Regular, Menlo, monospace';
+
+        for (let i = 0; i <= maxTicks; i++) {
+          const pos = i * spacing;
+          const major = i % majorEvery === 0;
+          const medium = i % mediumEvery === 0;
+          const tick = major ? 28 : medium ? 19 : 11;
+          ctx.beginPath();
+
+          if (edge === 'top') { ctx.moveTo(pos, 0); ctx.lineTo(pos, tick); }
+          if (edge === 'bottom') { ctx.moveTo(pos, height); ctx.lineTo(pos, height - tick); }
+          if (edge === 'left') { ctx.moveTo(0, pos); ctx.lineTo(tick, pos); }
+          if (edge === 'right') { ctx.moveTo(width, pos); ctx.lineTo(width - tick, pos); }
+          ctx.stroke();
+
+          if (!major) continue;
+          const label = state.unit === 'px' ? String(i * 10) : String(Math.round(i * labelScale));
+          if (edge === 'top') ctx.fillText(label, pos + 4, 43);
+          if (edge === 'bottom') ctx.fillText(label, pos + 4, height - 37);
+          if (edge === 'left') ctx.fillText(label, 34, pos + 4);
+          if (edge === 'right') {
+            ctx.textAlign = 'right';
+            ctx.fillText(label, width - 34, pos + 4);
+            ctx.textAlign = 'start';
+          }
+        }
+
+        ctx.restore();
+      }
+
+      function drawGuides(width, height) {
+        ctx.save();
+        ctx.strokeStyle = css('--accent');
+        ctx.fillStyle = css('--accent');
+        ctx.lineWidth = 1;
+        ctx.setLineDash([6, 5]);
+        ctx.font = '600 11px ui-monospace, SFMono-Regular, Menlo, monospace';
+
+        for (const guide of state.guides) {
+          ctx.beginPath();
+          if (guide.axis === 'x') {
+            ctx.moveTo(guide.pos, 0);
+            ctx.lineTo(guide.pos, height);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.fillText(format(guide.pos), guide.pos + 7, height - 12);
+          } else {
+            ctx.moveTo(0, guide.pos);
+            ctx.lineTo(width, guide.pos);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.fillText(format(guide.pos), width - 90, guide.pos - 7);
+          }
+          ctx.setLineDash([6, 5]);
+        }
+        ctx.restore();
+      }
+
+      function drawPointer(width, height) {
+        if (!pointer) return;
+        ctx.save();
+        ctx.strokeStyle = css('--accent');
+        ctx.globalAlpha = .55;
+        ctx.setLineDash([3, 4]);
+        ctx.beginPath();
+        ctx.moveTo(pointer.x, 0);
+        ctx.lineTo(pointer.x, height);
+        ctx.moveTo(0, pointer.y);
+        ctx.lineTo(width, pointer.y);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      function render() {
+        const { width, height } = setupCanvas();
+        ctx.clearRect(0, 0, width, height);
+        Object.entries(state.edges).forEach(([edge, enabled]) => enabled && drawRuler(edge, width, height));
+        drawGuides(width, height);
+        drawPointer(width, height);
+
+        document.documentElement.dataset.theme = state.theme;
+        document.querySelectorAll('[data-unit]').forEach(button => {
+          button.setAttribute('aria-pressed', String(button.dataset.unit === state.unit));
+        });
+        document.querySelectorAll('[data-edge]').forEach(button => {
+          button.setAttribute('aria-pressed', String(state.edges[button.dataset.edge]));
+        });
+        status.textContent = state.calibrated
+          ? `Calibrated: ${state.ppi.toFixed(1)} CSS px/in · keep zoom at 100%`
+          : 'Estimate only (96 CSS px/in) · calibrate for physical measurements';
+      }
+
+      function openCalibration() {
+        ppiRange.value = state.ppi;
+        ppiNumber.value = state.ppi;
+        updateCard();
+        calibrationDialog.showModal();
+      }
+
+      function updateCard() {
+        const ppi = Number(ppiRange.value);
+        cardPreview.style.width = `${85.6 / 25.4 * ppi}px`;
+        ppiOutput.value = `${ppi.toFixed(1)} CSS px/in`;
+      }
+
+      function applyCalibration(value) {
+        const ppi = Number(value);
+        if (!Number.isFinite(ppi) || ppi < 20 || ppi > 1000) return;
+        state.ppi = ppi;
+        state.calibrated = true;
+        save();
+        calibrationDialog.close();
+        render();
+      }
+
+      document.querySelectorAll('[data-unit]').forEach(button => button.addEventListener('click', () => {
+        state.unit = button.dataset.unit;
+        save();
+        render();
+      }));
+
+      document.querySelectorAll('[data-edge]').forEach(button => button.addEventListener('click', () => {
+        const edge = button.dataset.edge;
+        state.edges[edge] = !state.edges[edge];
+        save();
+        render();
+      }));
+
+      document.querySelectorAll('[data-close]').forEach(button => button.addEventListener('click', () => {
+        document.querySelector(`#${button.dataset.close}`).close();
+      }));
+
+      document.querySelectorAll('[data-tab]').forEach(button => button.addEventListener('click', () => {
+        document.querySelectorAll('[data-tab]').forEach(tab => tab.setAttribute('aria-pressed', String(tab === button)));
+        document.querySelectorAll('[data-panel]').forEach(panel => { panel.hidden = panel.dataset.panel !== button.dataset.tab; });
+      }));
+
+      document.querySelector('#calibrate').addEventListener('click', openCalibration);
+      document.querySelector('#help').addEventListener('click', () => helpDialog.showModal());
+      document.querySelector('#clear').addEventListener('click', () => { state.guides = []; render(); });
+      document.querySelector('#theme').addEventListener('click', () => {
+        state.theme = state.theme === 'dark' ? 'light' : 'dark';
+        save();
+        render();
+      });
+      document.querySelector('#fullscreen').addEventListener('click', async () => {
+        if (document.fullscreenElement) await document.exitFullscreen();
+        else await document.documentElement.requestFullscreen();
+      });
+      ppiRange.addEventListener('input', updateCard);
+      document.querySelector('#applyCard').addEventListener('click', () => applyCalibration(ppiRange.value));
+      document.querySelector('#applyManual').addEventListener('click', () => applyCalibration(ppiNumber.value));
+      document.querySelector('#resetCalibration').addEventListener('click', () => {
+        state.ppi = 96;
+        state.calibrated = false;
+        save();
+        calibrationDialog.close();
+        render();
+      });
+
+      stage.addEventListener('pointermove', event => {
+        pointer = { x: event.clientX, y: event.clientY };
+        readout.style.display = 'block';
+        readout.style.left = `${Math.min(event.clientX + 14, innerWidth - 118)}px`;
+        readout.style.top = `${Math.min(event.clientY + 14, innerHeight - 42)}px`;
+        readout.textContent = `${format(event.clientX)} × ${format(event.clientY)}`;
+        render();
+      });
+
+      stage.addEventListener('pointerleave', () => { pointer = null; readout.style.display = 'none'; render(); });
+      stage.addEventListener('click', event => {
+        if (event.target.closest('.toolbar, dialog')) return;
+        const candidates = state.guides.map((guide, index) => ({
+          index,
+          distance: Math.abs(guide.pos - (guide.axis === 'x' ? event.clientX : event.clientY))
+        })).filter(item => item.distance < 7).sort((a, b) => a.distance - b.distance);
+
+        if (candidates.length) state.guides.splice(candidates[0].index, 1);
+        else {
+          const verticalDistance = Math.min(event.clientX, innerWidth - event.clientX);
+          const horizontalDistance = Math.min(event.clientY, innerHeight - event.clientY);
+          state.guides.push(verticalDistance < horizontalDistance
+            ? { axis: 'x', pos: event.clientX }
+            : { axis: 'y', pos: event.clientY });
+        }
+        render();
+      });
+
+      addEventListener('keydown', event => {
+        if (event.target.matches('input')) return;
+        if (event.key === '1' || event.key === '2' || event.key === '3') {
+          state.unit = ({ '1': 'cm', '2': 'in', '3': 'px' })[event.key];
+          save();
+          render();
+        } else if (event.key.toLowerCase() === 'd') document.querySelector('#theme').click();
+        else if (event.key.toLowerCase() === 'f') document.querySelector('#fullscreen').click();
+        else if (event.key.toLowerCase() === 'h') helpDialog.showModal();
+        else if (event.key === 'Escape' && !document.querySelector('dialog[open]')) { state.guides = []; render(); }
+      });
+
+      addEventListener('resize', render);
+      render();
+    })();
+  </script>
+</body>
+</html>

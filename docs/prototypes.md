@@ -28,4 +28,5 @@ Visual variants of the same idea: [columns](prototypes/car-pie-menu/columns.html
 
 ## Small utilities
 
+- [Offline screen ruler](prototypes/online-ruler/index.html) — a self-contained centimetre, inch, and pixel ruler with card calibration, edge rulers, and guide lines; it keeps working from the checked-out HTML file without a network connection.
 - [Solar pump calculator](prototypes/solar-pump/index.html) — an old quick calculator (Spanish UI): electricity cost of running a pump over the years vs. the cost of the solar panels to power it instead.

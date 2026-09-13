@@ -198,3 +198,13 @@ closure as unlined; the standard now names the interoperable finish without inve
 
 Sources: [Thermo Fisher 63-415 Nalgene bottle specification](https://www.thermofisher.com/order/catalog/product/kr/en/312189-0032)
 and [Nalgene wide-mouth replacement cap](https://nalgene.com/product/wide-mouth-cap/).
+
+## 2026-09-13 — Added a self-contained screen ruler
+
+Added `docs/prototypes/online-ruler/index.html` after `realonlineruler.com` timed out. The replacement
+is an independent implementation rather than a copy of the unavailable site's code. It provides
+centimetre, inch, and pixel scales on any screen edge, guide lines, fullscreen and dark modes, and
+bank-card or manual calibration saved in browser storage. The single HTML file has no external
+assets or network requests. It rendered without browser errors, retained calibration across a
+reload, and its controls continued working after the local test server was stopped. The strict
+MkDocs build also passed.
