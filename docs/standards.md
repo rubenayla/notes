@@ -284,7 +284,7 @@ Since decimal base is common, add 5mm, 10mm, 50mm, 100mm, etc.
 - Bottle/Can:
     - Standard cocacola can: ~6 x 12 cm. 66.2mm diam, 122mm height
     - plastic bottle: 28-mm PCO 1881
-    - wide mouth daily use: Nalgene 63 mm OD, 2-start, 3.5 mm pitch, 1.25 turns, flat rim with axial silicone gasket
+    - For a reusable wide-mouth water bottle, use the Nalgene 63-415 neck finish.
     - wide mouth ideal not standard: 60mm OD, 3-start, 3mm pitch, 1.25 turns, flat rim with axial silicone gasket. 3 start means less cross-threading risk, faster open/close, better dent resistance. Just the higher lead causes more torque needed to compress the gasket the same amount, and achieve proper seal
 - Grinder (small standard) disc diameter: 115mm (type 1 guard)
 - Hose sizes (d_intxd_ext): ...x15mm, (10x17mm), **13x18mm** (1x2"), (...), 25x30mm (2.54cm = 1") (maybe with quick connect)

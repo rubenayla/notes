@@ -188,3 +188,13 @@ Rubén approved the simple edit with its opening restored and requested an Unlis
 ## 2026-09-12 — Corrected Unitekno and CEME identification
 
 Clear photographs show `UNITEKNO 703` printed on the machine and `CEME 6628EN2.0S.X1F`, `SERIE 688`, on the valve; the coil is also marked `EV576 D`. Replaced the false visual-match and unreadable-reference caveats in the public repair note with those literal markings.
+
+## 2026-09-13 — Specified the reusable bottle closure as Nalgene 63-415
+
+The author retained the Nalgene wide-mouth closure as the reusable water-bottle standard and
+replaced approximate measured geometry with the complete `63-415` neck-finish designation. The
+old line also claimed a silicone gasket, but official Nalgene documentation describes the matching
+closure as unlined; the standard now names the interoperable finish without inventing seal details.
+
+Sources: [Thermo Fisher 63-415 Nalgene bottle specification](https://www.thermofisher.com/order/catalog/product/kr/en/312189-0032)
+and [Nalgene wide-mouth replacement cap](https://nalgene.com/product/wide-mouth-cap/).

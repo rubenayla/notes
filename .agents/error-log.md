@@ -47,3 +47,14 @@ material even though the file change was reversible.
 **Prevention:** Draft any new standard or meaning-changing revision for Rubén's explicit approval
 before editing `docs/standards.md`. Record an unsettled preference privately until he approves the
 public wording.
+
+## 2026-09-13 — Ran repository checks from the parent directory after cloning (GPT-5.6 Sol)
+
+**What:** I cloned the notes repository successfully, then ran `git status` from its parent directory,
+so the combined command stopped with “not a git repository” before showing the target line.
+
+**Root cause:** The command changed filesystem state without changing its working directory for the
+checks that followed.
+
+**Prevention:** After cloning, run follow-up commands with `git -C <clone>` and explicit file paths,
+or start a separate command whose working directory is the new clone.
